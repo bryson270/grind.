@@ -1,0 +1,917 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Ante Up</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   ANTE UP — STYLES
+   ============================================================ */
+:root {
+  --black:#080808; --surface:#111; --surface2:#1a1a1a; --border:#252525;
+  --purple:#a78bfa; --purple-dim:#2a1a3a;
+  --green:#4ade80;  --green-dim:#1e3a2a;
+  --gold:#fbbf24;   --gold-dim:#2e2610;
+  --red:#f87171;    --blue:#60a5fa;
+  --white:#fff;     --text:#e5e5e5; --muted:#666;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html,body{height:100%;background:var(--black);}
+body{
+  font-family:'DM Sans',sans-serif;font-size:15px;color:var(--text);
+  display:flex;justify-content:center;
+  -webkit-tap-highlight-color:transparent;
+}
+#app{
+  width:100%;max-width:430px;min-height:100%;
+  background:var(--black);position:relative;
+  padding-bottom:80px;
+}
+
+/* SCREENS */
+.screen{display:none;animation:fadeIn 0.2s ease;}
+.screen.active{display:block;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+/* LOADING */
+#loading{
+  position:fixed;inset:0;background:var(--black);
+  display:flex;align-items:center;justify-content:center;
+  flex-direction:column;gap:16px;z-index:9999;
+}
+.spinner{
+  width:28px;height:28px;border-radius:50%;
+  border:2px solid var(--border);border-top-color:var(--purple);
+  animation:spin 0.7s linear infinite;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* SETUP BANNER */
+#setup-banner{
+  display:none;position:fixed;top:0;left:50%;transform:translateX(-50%);
+  width:100%;max-width:430px;background:#2e1a10;border-bottom:1px solid var(--gold);
+  padding:10px 16px;font-size:12px;color:var(--gold);z-index:200;text-align:center;
+}
+
+/* TOAST */
+#toast{
+  position:fixed;bottom:88px;left:50%;transform:translateX(-50%);
+  background:var(--surface2);border:0.5px solid var(--border);border-radius:20px;
+  padding:9px 18px;font-size:13px;color:var(--text);z-index:300;
+  opacity:0;transition:opacity 0.25s;white-space:nowrap;pointer-events:none;
+}
+#toast.show{opacity:1;}
+
+/* HEADER */
+.top-bar{
+  padding:52px 20px 14px;
+  display:flex;align-items:center;justify-content:space-between;
+  border-bottom:0.5px solid var(--border);
+}
+.logo{font-family:'Syne',sans-serif;font-weight:800;font-size:22px;color:var(--white);}
+.logo span{color:var(--purple);}
+.screen-hdr{
+  padding:52px 20px 14px;
+  display:flex;align-items:center;gap:12px;
+  border-bottom:0.5px solid var(--border);
+}
+.back-btn{
+  background:none;border:none;color:var(--purple);
+  font-size:13px;cursor:pointer;padding:0;display:flex;align-items:center;gap:4px;
+}
+.screen-title{font-family:'Syne',sans-serif;font-weight:700;font-size:19px;color:var(--white);}
+
+/* PAGE CONTENT */
+.pg{padding:16px 20px 24px;}
+
+/* CARDS */
+.card{
+  background:var(--surface);border:0.5px solid var(--border);
+  border-radius:16px;padding:16px;margin-bottom:12px;
+}
+.card.p{border-color:rgba(167,139,250,0.35);}
+.card.g{border-color:rgba(74,222,128,0.25);}
+.card.gold{border-color:rgba(251,191,36,0.3);}
+
+/* BUTTONS */
+.btn{
+  width:100%;padding:13px;border:none;border-radius:12px;
+  font-size:14px;font-family:'Syne',sans-serif;font-weight:700;
+  cursor:pointer;transition:opacity 0.15s,transform 0.1s;margin-top:8px;
+  display:block;text-align:center;
+}
+.btn:active{transform:scale(0.98);opacity:0.85;}
+.btn-primary{background:var(--purple);color:#000;}
+.btn-outline{background:transparent;color:var(--purple);border:1px solid var(--purple);}
+.btn-green{background:var(--green-dim);color:var(--green);border:0.5px solid rgba(74,222,128,0.3);}
+.btn-red{background:transparent;color:var(--red);border:1px solid var(--red);}
+.btn-sm{width:auto;padding:7px 14px;font-size:12px;margin-top:0;border-radius:8px;}
+
+/* INPUTS */
+.ig{margin-bottom:14px;}
+.lbl{
+  display:block;font-size:10px;color:var(--muted);
+  text-transform:uppercase;letter-spacing:0.06em;
+  font-family:'DM Mono',monospace;margin-bottom:5px;
+}
+.inp{
+  width:100%;background:var(--surface2);border:0.5px solid var(--border);
+  border-radius:10px;padding:11px 13px;color:var(--white);
+  font-size:14px;font-family:'DM Sans',sans-serif;
+  outline:none;transition:border-color 0.2s;
+  -webkit-appearance:none;
+}
+.inp:focus{border-color:var(--purple);}
+.inp::placeholder{color:var(--muted);}
+textarea.inp{resize:none;height:78px;}
+
+/* CHOICES */
+.cr{display:flex;gap:6px;flex-wrap:wrap;}
+.cb{
+  flex:1;min-width:60px;background:var(--surface2);
+  border:0.5px solid var(--border);border-radius:10px;
+  padding:9px 4px;color:var(--muted);font-size:12px;
+  text-align:center;cursor:pointer;transition:all 0.15s;
+  font-family:'DM Sans',sans-serif;line-height:1.3;
+  user-select:none;
+}
+.cb:active{transform:scale(0.97);}
+.cb.on{border-color:var(--purple);color:var(--purple);background:var(--purple-dim);}
+
+/* PILLS */
+.pill{
+  font-size:10px;border-radius:20px;padding:3px 8px;
+  font-family:'DM Mono',monospace;display:inline-block;white-space:nowrap;
+}
+.pp{background:var(--purple-dim);color:var(--purple);}
+.pg-pill{background:var(--green-dim);color:var(--green);}
+.pa{background:var(--gold-dim);color:var(--gold);}
+.pm{background:var(--surface2);color:var(--muted);}
+.pr{background:rgba(248,113,113,0.15);color:var(--red);}
+
+/* STAT GRID */
+.sg{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;}
+.sb{background:var(--surface2);border-radius:12px;padding:12px 13px;}
+.sl{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em;font-family:'DM Mono',monospace;margin-bottom:3px;}
+.sv{font-size:19px;font-weight:500;color:var(--white);}
+.sv.gn{color:var(--green);}
+.sv.pu{color:var(--purple);}
+.sv.go{color:var(--gold);}
+.sv.re{color:var(--red);}
+
+/* PROGRESS */
+.pb-bg{background:var(--border);border-radius:4px;height:5px;margin:6px 0 3px;}
+.pb{border-radius:4px;height:5px;background:var(--purple);transition:width 0.3s;}
+
+/* LIST ITEMS */
+.li-wrap{padding:11px 0;border-bottom:0.5px solid var(--border);display:flex;align-items:center;gap:11px;cursor:pointer;}
+.li-wrap:last-child{border-bottom:none;}
+.li-icon{width:34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:15px;}
+.li-body{flex:1;min-width:0;}
+.li-t{font-size:13px;font-weight:500;color:var(--white);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.li-s{font-size:11px;color:var(--muted);margin-top:1px;}
+
+/* AVATAR */
+.av{
+  width:50px;height:50px;border-radius:50%;
+  background:var(--purple-dim);display:flex;align-items:center;justify-content:center;
+  font-size:17px;font-weight:700;color:var(--purple);
+  font-family:'Syne',sans-serif;flex-shrink:0;
+}
+
+/* EMPTY */
+.empty{text-align:center;padding:36px 20px;color:var(--muted);}
+.ei{font-size:38px;margin-bottom:10px;opacity:0.5;}
+.et{font-size:15px;font-weight:500;color:var(--text);margin-bottom:5px;}
+.es{font-size:13px;line-height:1.55;}
+
+/* NOTE */
+.note{
+  background:var(--surface2);border-left:3px solid var(--purple);
+  border-radius:0 10px 10px 0;padding:11px 13px;
+  font-size:13px;color:var(--muted);line-height:1.6;margin:10px 0;
+}
+.note.gn{border-left-color:var(--green);}
+.note.go{border-left-color:var(--gold);}
+.note b{color:var(--text);}
+
+/* ROW */
+.row{display:flex;justify-content:space-between;align-items:center;}
+
+/* SECTION LABEL */
+.slbl{
+  font-size:10px;color:var(--muted);text-transform:uppercase;
+  letter-spacing:0.06em;font-family:'DM Mono',monospace;
+  margin-bottom:8px;margin-top:4px;display:block;
+}
+
+/* DIVIDER */
+.dv{border:none;border-top:0.5px solid var(--border);margin:12px 0;}
+
+/* PROFIT NUMBER */
+.pnum{
+  font-family:'Syne',sans-serif;font-weight:800;
+  font-size:42px;letter-spacing:-0.02em;line-height:1;
+}
+
+/* TAB BAR */
+#tab-bar{
+  position:fixed;bottom:0;left:50%;transform:translateX(-50%);
+  width:100%;max-width:430px;
+  background:rgba(8,8,8,0.94);backdrop-filter:blur(20px);
+  border-top:0.5px solid var(--border);
+  display:none;justify-content:space-around;
+  padding:10px 0 18px;z-index:100;
+}
+#tab-bar.vis{display:flex;}
+.ti{
+  display:flex;flex-direction:column;align-items:center;
+  gap:3px;cursor:pointer;padding:0 14px;
+  color:var(--muted);transition:color 0.15s;
+}
+.ti.on{color:var(--purple);}
+.ti-ic{font-size:21px;}
+.ti-lb{font-size:9px;}
+</style>
+</head>
+<body>
+
+<!-- LOADING -->
+<div id="loading">
+  <div class="logo" style="font-size:30px;">ante<span style="color:var(--purple);">up</span></div>
+  <div class="spinner"></div>
+</div>
+
+<!-- SETUP WARNING (shows if Firebase not configured) -->
+<div id="setup-banner">⚠️ Firebase not configured — see setup instructions in the code</div>
+
+<!-- TOAST -->
+<div id="toast"></div>
+
+<!-- APP SHELL -->
+<div id="app">
+
+  <!-- ====== LOGIN ====== -->
+  <div class="screen" id="s-login">
+    <div style="padding:64px 24px 40px;">
+      <div class="logo" style="margin-bottom:28px;">ante<span>up</span></div>
+      <h1 style="font-family:'Syne',sans-serif;font-weight:800;font-size:38px;color:var(--white);line-height:1.0;letter-spacing:-0.02em;">
+        Lock in.<br>Put money<br><span style="color:var(--purple);">on the line.</span>
+      </h1>
+      <p style="font-size:14px;color:var(--muted);margin:14px 0 36px;line-height:1.6;">Real accountability — because real money is at stake.</p>
+
+      <div class="ig"><label class="lbl">Email</label><input type="email" class="inp" id="a-email" placeholder="your@email.com"></div>
+      <div class="ig" id="a-name-wrap" style="display:none;"><label class="lbl">Your name</label><input type="text" class="inp" id="a-name" placeholder="Jordan Kim"></div>
+      <div class="ig"><label class="lbl">Password</label><input type="password" class="inp" id="a-pass" placeholder="••••••••"></div>
+
+      <button class="btn btn-primary" id="a-btn" onclick="doAuth()">Sign in</button>
+      <button class="btn btn-outline" id="a-tog" onclick="togAuth()" style="margin-top:6px;">Don't have an account? Sign up</button>
+
+      <p style="font-size:11px;color:var(--muted);text-align:center;margin-top:20px;line-height:1.6;">Your deposits are secured by Stripe. Ante Up never stores card details.</p>
+    </div>
+  </div>
+
+  <!-- ====== DASHBOARD ====== -->
+  <div class="screen" id="s-dashboard">
+    <div class="top-bar">
+      <div class="logo">ante<span>up</span></div>
+      <span class="pill pg-pill" id="streak-pill">0 day streak</span>
+    </div>
+    <div class="pg" id="dash-body"></div>
+  </div>
+
+  <!-- ====== NEW CHALLENGE ====== -->
+  <div class="screen" id="s-new-challenge">
+    <div class="screen-hdr">
+      <button class="back-btn" onclick="goTab('dashboard')">← back</button>
+      <div class="screen-title">New challenge</div>
+    </div>
+    <div class="pg">
+      <div class="ig"><label class="lbl">What's your goal?</label>
+        <textarea class="inp" id="nc-goal" placeholder="e.g. Launch my Shopify store, build my app, grow to 10k followers..."></textarea>
+      </div>
+
+      <div class="ig"><label class="lbl">Duration</label>
+        <div class="cr">
+          <div class="cb" data-g="dur" data-v="30" onclick="pick(this)">30 days</div>
+          <div class="cb" data-g="dur" data-v="60" onclick="pick(this)">60 days</div>
+          <div class="cb" data-g="dur" data-v="90" onclick="pick(this)">90 days</div>
+        </div>
+      </div>
+
+      <div class="ig"><label class="lbl">Goal type</label>
+        <div class="cr">
+          <div class="cb" data-g="gt" data-v="progress" onclick="pick(this)">
+            <div style="font-weight:500;">Progress</div>
+            <div style="font-size:10px;color:var(--muted);margin-top:2px;">Buy-in protected</div>
+          </div>
+          <div class="cb" data-g="gt" data-v="profit" onclick="pick(this)">
+            <div style="font-weight:500;">Profit</div>
+            <div style="font-size:10px;color:var(--muted);margin-top:2px;">Win the pot</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="ig"><label class="lbl">Deposit amount</label>
+        <div class="cr">
+          <div class="cb" data-g="dep" data-v="25" onclick="pick(this)">$25</div>
+          <div class="cb" data-g="dep" data-v="50" onclick="pick(this)">$50</div>
+          <div class="cb" data-g="dep" data-v="100" onclick="pick(this)">$100</div>
+        </div>
+      </div>
+
+      <div class="ig"><label class="lbl">If I quit, donate to...</label>
+        <div class="cr">
+          <div class="cb" data-g="ch" data-v="Trees for the Future" onclick="pick(this)">🌳 Trees</div>
+          <div class="cb" data-g="ch" data-v="St. Jude's" onclick="pick(this)">🏥 St. Jude's</div>
+          <div class="cb" data-g="ch" data-v="Red Cross" onclick="pick(this)">❤️ Red Cross</div>
+        </div>
+      </div>
+
+      <div id="nc-msg" style="display:none;" class="note go"></div>
+
+      <button class="btn btn-primary" onclick="startChallenge()">Lock in — pay deposit</button>
+
+      <div class="note" style="margin-top:12px;">
+        <b>Progress goal:</b> Deposit returned in full as long as you show up weekly.<br><br>
+        <b>Profit goal:</b> Hit your revenue target and win a share of the pot.
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== LOG SESSION ====== -->
+  <div class="screen" id="s-log-session">
+    <div class="screen-hdr">
+      <button class="back-btn" onclick="goTab('dashboard')">← back</button>
+      <div class="screen-title">Log session</div>
+    </div>
+    <div class="pg">
+      <div id="sess-banner"></div>
+      <div class="ig"><label class="lbl">Duration</label>
+        <div class="cr">
+          <div class="cb" data-g="sd" data-v="30" onclick="pick(this)">30 min</div>
+          <div class="cb" data-g="sd" data-v="60" onclick="pick(this)">1 hr</div>
+          <div class="cb" data-g="sd" data-v="90" onclick="pick(this)">90 min</div>
+          <div class="cb" data-g="sd" data-v="120" onclick="pick(this)">2 hrs</div>
+        </div>
+      </div>
+      <div class="ig"><label class="lbl">What did you work on?</label>
+        <textarea class="inp" id="sess-notes" placeholder="e.g. Built the login screen, recorded 3 videos, wrote 5 product descriptions..."></textarea>
+      </div>
+      <div class="ig"><label class="lbl">Session result</label>
+        <div class="cr">
+          <div class="cb" data-g="sc" data-v="yes" onclick="pick(this)">✓ Completed</div>
+          <div class="cb" data-g="sc" data-v="no" onclick="pick(this)">✗ Cut short</div>
+        </div>
+      </div>
+      <button class="btn btn-primary" onclick="logSession()">Save session</button>
+    </div>
+  </div>
+
+  <!-- ====== PROFILE ====== -->
+  <div class="screen" id="s-profile">
+    <div class="top-bar">
+      <div class="screen-title">Profile</div>
+      <button class="btn btn-outline btn-sm" onclick="doSignOut()" style="width:auto;">Sign out</button>
+    </div>
+    <div class="pg" id="prof-body"></div>
+  </div>
+
+  <!-- ====== CHALLENGE DETAIL ====== -->
+  <div class="screen" id="s-challenge-detail">
+    <div class="screen-hdr">
+      <button class="back-btn" onclick="goTab('dashboard')">← back</button>
+      <div class="screen-title">Challenge</div>
+    </div>
+    <div class="pg" id="cdet-body"></div>
+  </div>
+
+</div>
+
+<!-- TAB BAR -->
+<div id="tab-bar">
+  <div class="ti on" onclick="goTab('dashboard')" data-tab="dashboard"><div class="ti-ic">🏠</div><div class="ti-lb">home</div></div>
+  <div class="ti" onclick="goTab('new-challenge')" data-tab="new-challenge"><div class="ti-ic">🏆</div><div class="ti-lb">challenge</div></div>
+  <div class="ti" onclick="goTab('log-session')" data-tab="log-session"><div class="ti-ic">⏱</div><div class="ti-lb">session</div></div>
+  <div class="ti" onclick="goTab('profile')" data-tab="profile"><div class="ti-ic">👤</div><div class="ti-lb">profile</div></div>
+</div>
+
+<!-- FIREBASE SDK -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+
+<script>
+/* ============================================================
+   ⚙️  SETUP — FOLLOW THESE 5 STEPS
+   ============================================================
+
+   STEP 1: Create a free Firebase project
+   → Go to console.firebase.google.com
+   → Click "Add project" → name it "ante-up" → create
+   → Click "Web" icon (</>) → name it "ante-up-web" → register
+   → Copy the firebaseConfig object shown and paste it below
+
+   STEP 2: Enable Email/Password sign in
+   → Firebase Console → Authentication → Get started
+   → Sign-in method → Email/Password → Enable → Save
+
+   STEP 3: Create Firestore database
+   → Firebase Console → Firestore Database → Create database
+   → Start in TEST mode → choose a location → done
+   → Go to Rules tab → paste this:
+     rules_version = '2';
+     service cloud.firestore {
+       match /databases/{database}/documents {
+         match /{document=**} {
+           allow read, write: if request.auth != null;
+         }
+       }
+     }
+   → Publish rules
+
+   STEP 4: Create Stripe payment links
+   → Go to dashboard.stripe.com → Products → Add product
+   → Create 3 products: "$25 Deposit", "$50 Deposit", "$100 Deposit"
+   → For each: click "Share" → copy Payment Link → paste below
+
+   STEP 5: Upload to GitHub and enable Pages
+   → Create a free GitHub account at github.com
+   → Create a new repository → name it "ante-up"
+   → Upload this file as "index.html"
+   → Go to Settings → Pages → Branch: main → Save
+   → Your app is live at username.github.io/ante-up
+
+   ============================================================ */
+
+const FIREBASE_CONFIG = {
+  apiKey:            "AIzaSyDaxvIxnazhoZWBIMa10sD8G7c50dKFZAM",
+  authDomain:        "ante-up-c264e.firebaseapp.com",
+  projectId:         "ante-up-c264e",
+  storageBucket:     "ante-up-c264e.firebasestorage.app",
+  messagingSenderId: "73817580529",
+  appId:             "1:73817580529:web:0490cc969e57b879f39a50"
+};
+
+const STRIPE = {
+  '25':  'PASTE_YOUR_$25_STRIPE_PAYMENT_LINK_HERE',
+  '50':  'PASTE_YOUR_$50_STRIPE_PAYMENT_LINK_HERE',
+  '100': 'PASTE_YOUR_$100_STRIPE_PAYMENT_LINK_HERE'
+};
+
+/* ============================================================
+   🔥 INIT
+   ============================================================ */
+const configured = !FIREBASE_CONFIG.apiKey.includes('PASTE');
+if (!configured) {
+  document.getElementById('setup-banner').style.display = 'block';
+}
+
+firebase.initializeApp(FIREBASE_CONFIG);
+const auth = firebase.auth();
+const db   = firebase.firestore();
+
+/* ============================================================
+   📦 STATE
+   ============================================================ */
+let me = null, meData = null, challenges = [], sessions = [];
+let picks = {};
+let signUp = false;
+let selChallenge = null;
+
+/* ============================================================
+   🔐 AUTH
+   ============================================================ */
+auth.onAuthStateChanged(async u => {
+  if (u) {
+    me = u;
+    await loadAll();
+    hideLd();
+    goTab('dashboard');
+  } else {
+    me = null;
+    hideLd();
+    show('login');
+    document.getElementById('tab-bar').classList.remove('vis');
+  }
+});
+
+function togAuth() {
+  signUp = !signUp;
+  document.getElementById('a-btn').textContent = signUp ? 'Create account' : 'Sign in';
+  document.getElementById('a-tog').textContent = signUp ? 'Already have an account? Sign in' : "Don't have an account? Sign up";
+  document.getElementById('a-name-wrap').style.display = signUp ? 'block' : 'none';
+}
+
+async function doAuth() {
+  const email = document.getElementById('a-email').value.trim();
+  const pass  = document.getElementById('a-pass').value;
+  const name  = document.getElementById('a-name')?.value.trim();
+  if (!email || !pass) { toast('Enter your email and password'); return; }
+  try {
+    if (signUp) {
+      if (!name) { toast('Enter your name'); return; }
+      const c = await auth.createUserWithEmailAndPassword(email, pass);
+      await db.collection('users').doc(c.user.uid).set({
+        name, email, streak:0, level:1,
+        totalDeposited:0, totalReturned:0,
+        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+      });
+    } else {
+      await auth.signInWithEmailAndPassword(email, pass);
+    }
+  } catch(e) {
+    const msgs = {
+      'auth/user-not-found':'No account found with that email',
+      'auth/wrong-password':'Wrong password — try again',
+      'auth/email-already-in-use':'Account already exists — try signing in',
+      'auth/weak-password':'Password needs at least 6 characters',
+      'auth/invalid-email':'Enter a valid email address',
+      'auth/network-request-failed':'No internet connection'
+    };
+    toast(msgs[e.code] || 'Something went wrong');
+  }
+}
+
+async function doSignOut() {
+  await auth.signOut();
+}
+
+/* ============================================================
+   📊 DATA
+   ============================================================ */
+async function loadAll() {
+  try {
+    const ud = await db.collection('users').doc(me.uid).get();
+    meData = ud.exists ? ud.data() : { name: me.email.split('@')[0], streak:0, level:1, totalDeposited:0, totalReturned:0 };
+
+    const cq = await db.collection('challenges').where('uid','==',me.uid).get();
+    challenges = cq.docs.map(d => ({id:d.id,...d.data()}))
+      .sort((a,b) => (b.createdAt?.seconds||0) - (a.createdAt?.seconds||0));
+
+    const sq = await db.collection('sessions').where('uid','==',me.uid).get();
+    sessions = sq.docs.map(d => ({id:d.id,...d.data()}))
+      .sort((a,b) => (b.createdAt?.seconds||0) - (a.createdAt?.seconds||0));
+  } catch(e) {
+    console.warn('Data load error:', e);
+  }
+}
+
+/* ============================================================
+   🧭 NAV
+   ============================================================ */
+function show(name) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('s-' + name).classList.add('active');
+}
+
+function goTab(name) {
+  show(name);
+  document.querySelectorAll('.ti').forEach(t => t.classList.toggle('on', t.dataset.tab === name));
+  document.getElementById('tab-bar').classList.add('vis');
+  window.scrollTo(0,0);
+  if (name==='dashboard')    renderDash();
+  if (name==='profile')      renderProf();
+  if (name==='log-session')  renderSessBanner();
+  if (name==='new-challenge'){ picks={}; document.querySelectorAll('.cb').forEach(b=>b.classList.remove('on')); const g=document.getElementById('nc-goal');if(g)g.value=''; const m=document.getElementById('nc-msg');if(m)m.style.display='none'; }
+}
+
+function hideLd() { document.getElementById('loading').style.display='none'; }
+
+/* ============================================================
+   🏠 DASHBOARD
+   ============================================================ */
+function renderDash() {
+  const name  = (meData?.name||'').split(' ')[0] || 'there';
+  const active = challenges.filter(c=>c.status==='active');
+  const done   = challenges.filter(c=>c.status==='completed');
+  const streak = meData?.streak||0;
+  document.getElementById('streak-pill').textContent = streak + ' day streak' + (streak>0?' 🔥':'');
+
+  let h = `<p style="font-size:14px;color:var(--muted);margin-bottom:14px;">Good ${greet()}, <b style="color:var(--text);">${name}</b></p>`;
+
+  if (active.length) {
+    const c = active[0];
+    const d = daysSince(c.createdAt);
+    const p = Math.min(100, Math.round((d/c.duration)*100));
+    const sc = sessions.filter(s=>s.cid===c.id&&s.done).length;
+    h += `<div class="card p" onclick="openChal('${c.id}')" style="cursor:pointer;">
+      <div class="row" style="margin-bottom:6px;">
+        <p style="font-size:13px;font-weight:500;color:var(--white);">Active challenge</p>
+        <span class="pill pg-pill">Day ${d} / ${c.duration}</span>
+      </div>
+      <p style="font-size:15px;font-weight:500;color:var(--white);margin-bottom:4px;">"${esc(c.goal)}"</p>
+      <p style="font-size:11px;color:var(--muted);margin-bottom:8px;">${c.gt==='progress'?'🛡 Buy-in protected':'💰 Profit goal'} · $${c.dep} deposit</p>
+      <div class="pb-bg"><div class="pb" style="width:${p}%;"></div></div>
+      <div class="row" style="margin-top:5px;">
+        <span style="font-size:11px;color:var(--muted);">${p}% done · ${sc} sessions</span>
+        <span style="font-size:11px;color:var(--purple);">tap to view →</span>
+      </div>
+    </div>
+    <button class="btn btn-green" onclick="goTab('log-session')" style="margin-bottom:14px;">⏱ Log today's session</button>`;
+  } else {
+    h += `<div class="card">
+      <div class="empty">
+        <div class="ei">🎯</div>
+        <div class="et">No active challenge</div>
+        <div class="es">Start a challenge, put money on the line, and get to work.</div>
+      </div>
+      <button class="btn btn-primary" onclick="goTab('new-challenge')">Start a challenge</button>
+    </div>`;
+  }
+
+  if (sessions.length) {
+    h += `<span class="slbl">Recent sessions</span><div class="card">`;
+    sessions.slice(0,5).forEach(s=>{
+      const dur = s.mins>=60 ? Math.floor(s.mins/60)+'h'+(s.mins%60?' '+(s.mins%60)+'m':'') : s.mins+'m';
+      h += `<div class="li-wrap" style="cursor:default;">
+        <div class="li-icon" style="background:${s.done?'var(--green-dim)':'var(--surface2)'};">${s.done?'✅':'⚠️'}</div>
+        <div class="li-body">
+          <div class="li-t">${esc(s.notes)||'Session logged'}</div>
+          <div class="li-s">${fmtDate(s.createdAt)}</div>
+        </div>
+        <span style="font-size:13px;font-weight:500;color:var(--text);">${dur}</span>
+      </div>`;
+    });
+    h += `</div>`;
+  }
+
+  if (done.length) {
+    h += `<span class="slbl">Completed</span><div class="card">`;
+    done.forEach(c=>{
+      h += `<div class="li-wrap" onclick="openChal('${c.id}')">
+        <div class="li-icon" style="background:var(--green-dim);">✅</div>
+        <div class="li-body">
+          <div class="li-t">${esc(c.goal)}</div>
+          <div class="li-s">${c.duration} days · $${c.dep}</div>
+        </div>
+        <span class="pill pg-pill">done</span>
+      </div>`;
+    });
+    h += `</div>`;
+  }
+
+  document.getElementById('dash-body').innerHTML = h;
+}
+
+/* ============================================================
+   🏆 CHALLENGE DETAIL
+   ============================================================ */
+function openChal(id) {
+  selChallenge = challenges.find(c=>c.id===id);
+  if (!selChallenge) return;
+  show('challenge-detail');
+  document.getElementById('tab-bar').classList.add('vis');
+  const c  = selChallenge;
+  const d  = daysSince(c.createdAt);
+  const p  = Math.min(100,Math.round((d/c.duration)*100));
+  const sc = sessions.filter(s=>s.cid===c.id&&s.done).length;
+  const tm = sessions.filter(s=>s.cid===c.id&&s.done).reduce((a,b)=>a+(b.mins||0),0);
+
+  let h = `<div class="card p">
+    <div class="row" style="margin-bottom:8px;">
+      <span class="pill ${c.status==='active'?'pg-pill':'pm'}">${c.status}</span>
+      <span class="pill pp">Day ${d} of ${c.duration}</span>
+    </div>
+    <p style="font-size:16px;font-weight:500;color:var(--white);margin-bottom:8px;">"${esc(c.goal)}"</p>
+    <div class="pb-bg"><div class="pb" style="width:${p}%;"></div></div>
+    <p style="font-size:11px;color:var(--muted);margin-top:5px;">${p}% complete</p>
+  </div>
+  <div class="sg">
+    <div class="sb"><div class="sl">Sessions</div><div class="sv pu">${sc}</div></div>
+    <div class="sb"><div class="sl">Hours</div><div class="sv pu">${Math.floor(tm/60)}h${tm%60?' '+(tm%60)+'m':''}</div></div>
+    <div class="sb"><div class="sl">Deposit</div><div class="sv go">$${c.dep}</div></div>
+    <div class="sb"><div class="sl">Charity</div><div class="sv" style="font-size:11px;">${c.charity||'—'}</div></div>
+  </div>`;
+
+  if (c.gt==='progress') h += `<div class="note gn"><b>🛡 Buy-in protected</b> — Complete your weekly sessions and your $${c.dep} is returned in full when this challenge ends.</div>`;
+
+  if (c.status==='active') {
+    h += `<button class="btn btn-green" onclick="goTab('log-session')">⏱ Log a session</button>
+    <button class="btn btn-primary" onclick="doneChal('${c.id}')">✅ I completed this challenge</button>
+    <button class="btn btn-red" onclick="quitChal('${c.id}')">Quit challenge</button>
+    <div class="note go" style="margin-top:12px;"><b>Completing:</b> Your $${c.dep} deposit will be refunded (minus 10% fee) within 5 business days.<br><br><b>Quitting:</b> Your $${c.dep} is donated to ${c.charity||'your chosen charity'}.</div>`;
+  }
+
+  document.getElementById('cdet-body').innerHTML = h;
+}
+
+async function doneChal(id) {
+  const c = challenges.find(x=>x.id===id);
+  if (!confirm('Mark as completed? Deposit refunded minus 10% fee within 5 business days.')) return;
+  await db.collection('challenges').doc(id).update({status:'completed'});
+  // Update total returned in user record
+  await db.collection('users').doc(me.uid).update({
+    totalReturned: firebase.firestore.FieldValue.increment(Math.round(c.dep*0.9))
+  });
+  challenges = challenges.map(x=>x.id===id?{...x,status:'completed'}:x);
+  toast('🎉 Challenge complete! Refund on its way.');
+  goTab('dashboard');
+}
+
+async function quitChal(id) {
+  const c = challenges.find(x=>x.id===id);
+  if (!confirm(`Quit? Your $${c?.dep} goes to ${c?.charity||'charity'}.`)) return;
+  await db.collection('challenges').doc(id).update({status:'failed'});
+  challenges = challenges.map(x=>x.id===id?{...x,status:'failed'}:x);
+  toast('Challenge ended. Deposit donated.');
+  goTab('dashboard');
+}
+
+/* ============================================================
+   🆕 NEW CHALLENGE
+   ============================================================ */
+function pick(el) {
+  const g = el.dataset.g, v = el.dataset.v;
+  picks[g] = v;
+  document.querySelectorAll(`.cb[data-g="${g}"]`).forEach(b=>b.classList.toggle('on', b===el));
+}
+
+async function startChallenge() {
+  const goal = document.getElementById('nc-goal')?.value.trim();
+  if (!goal)         { toast('Describe your goal'); return; }
+  if (!picks.dur)    { toast('Choose a duration'); return; }
+  if (!picks.gt)     { toast('Choose a goal type'); return; }
+  if (!picks.dep)    { toast('Choose a deposit amount'); return; }
+  if (!picks.ch)     { toast('Choose a charity'); return; }
+
+  const ref = await db.collection('challenges').add({
+    uid: me.uid, email: me.email,
+    goal, duration:parseInt(picks.dur),
+    gt: picks.gt, dep:parseInt(picks.dep),
+    charity:picks.ch, status:'active',
+    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+  });
+
+  // Update total deposited
+  await db.collection('users').doc(me.uid).update({
+    totalDeposited: firebase.firestore.FieldValue.increment(parseInt(picks.dep))
+  });
+
+  challenges.unshift({
+    id:ref.id, uid:me.uid, goal, duration:parseInt(picks.dur),
+    gt:picks.gt, dep:parseInt(picks.dep), charity:picks.ch, status:'active',
+    createdAt:{seconds:Date.now()/1000}
+  });
+
+  // Show message and open Stripe
+  const msg = document.getElementById('nc-msg');
+  msg.innerHTML = `<b>Almost done!</b> Tapping the button above opened Stripe to pay your $${picks.dep} deposit. Come back here once payment is confirmed.`;
+  msg.style.display = 'block';
+
+  const link = STRIPE[picks.dep];
+  if (link && !link.includes('PASTE')) {
+    window.open(link + '?client_reference_id=' + ref.id, '_blank');
+  } else {
+    toast('⚠️ Add Stripe links in the config to accept payments');
+  }
+
+  toast('Challenge created! Complete payment in Stripe.');
+  setTimeout(()=>goTab('dashboard'), 2500);
+}
+
+/* ============================================================
+   ⏱ SESSION
+   ============================================================ */
+function renderSessBanner() {
+  const a = challenges.find(c=>c.status==='active');
+  const b = document.getElementById('sess-banner');
+  if (!b) return;
+  b.innerHTML = a
+    ? `<div class="card p" style="margin-bottom:14px;"><p style="font-size:11px;color:var(--muted);">Logging for:</p><p style="font-size:14px;font-weight:500;color:var(--white);">"${esc(a.goal)}"</p></div>`
+    : `<div class="note go"><b>No active challenge.</b> Start a challenge before logging sessions.</div>`;
+}
+
+async function logSession() {
+  if (!picks.sd) { toast('How long was your session?'); return; }
+  if (!picks.sc) { toast('Did you complete it?'); return; }
+  const active = challenges.find(c=>c.status==='active');
+  const notes  = document.getElementById('sess-notes')?.value.trim()||'';
+  const done   = picks.sc==='yes';
+
+  await db.collection('sessions').add({
+    uid: me.uid,
+    cid: active?.id||null,
+    mins: parseInt(picks.sd),
+    notes, done,
+    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+  });
+
+  if (done) {
+    await db.collection('users').doc(me.uid).update({
+      streak: firebase.firestore.FieldValue.increment(1)
+    });
+    if (meData) meData.streak = (meData.streak||0)+1;
+  }
+
+  sessions.unshift({uid:me.uid,cid:active?.id,mins:parseInt(picks.sd),notes,done,createdAt:{seconds:Date.now()/1000}});
+  toast(done?'✅ Session logged! Keep going.':'⚠️ Session saved.');
+  picks.sd=null; picks.sc=null;
+  document.querySelectorAll('.cb[data-g="sd"],.cb[data-g="sc"]').forEach(b=>b.classList.remove('on'));
+  const n=document.getElementById('sess-notes');if(n)n.value='';
+  setTimeout(()=>goTab('dashboard'),1200);
+}
+
+/* ============================================================
+   👤 PROFILE
+   ============================================================ */
+function renderProf() {
+  const name    = meData?.name||me?.email?.split('@')[0]||'User';
+  const init    = name.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2);
+  const dep     = meData?.totalDeposited||0;
+  const ret     = meData?.totalReturned||0;
+  const profit  = ret-dep;
+  const streak  = meData?.streak||0;
+  const totMin  = sessions.reduce((a,s)=>a+(s.mins||0),0);
+
+  let h = `<div style="display:flex;align-items:center;gap:14px;margin-bottom:20px;">
+    <div class="av">${init}</div>
+    <div>
+      <p style="font-size:17px;font-weight:500;color:var(--white);">${esc(name)}</p>
+      <p style="font-size:12px;color:var(--muted);">${me?.email} · Level ${meData?.level||1}</p>
+    </div>
+  </div>
+
+  <div class="card ${profit>=0?'g':''}" style="margin-bottom:12px;">
+    <span class="slbl" style="margin-bottom:6px;">total profit made</span>
+    <div class="pnum" style="color:${profit>=0?'var(--green)':'var(--red)'};">${profit>=0?'+':'-'}$${Math.abs(profit)}</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:14px;">
+      <div style="background:var(--surface2);border-radius:10px;padding:10px;text-align:center;">
+        <p style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:0.04em;font-family:'DM Mono',monospace;">deposited</p>
+        <p style="font-size:15px;font-weight:500;color:var(--red);">$${dep}</p>
+      </div>
+      <div style="background:var(--surface2);border-radius:10px;padding:10px;text-align:center;">
+        <p style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:0.04em;font-family:'DM Mono',monospace;">returned</p>
+        <p style="font-size:15px;font-weight:500;color:var(--green);">$${ret}</p>
+      </div>
+      <div style="background:var(--surface2);border-radius:10px;padding:10px;text-align:center;">
+        <p style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:0.04em;font-family:'DM Mono',monospace;">net</p>
+        <p style="font-size:15px;font-weight:500;color:${profit>=0?'var(--green)':'var(--red)'};">${profit>=0?'+':'-'}$${Math.abs(profit)}</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="sg">
+    <div class="sb"><div class="sl">Streak</div><div class="sv gn">${streak} 🔥</div></div>
+    <div class="sb"><div class="sl">Challenges</div><div class="sv pu">${challenges.length}</div></div>
+    <div class="sb"><div class="sl">Sessions</div><div class="sv">${sessions.length}</div></div>
+    <div class="sb"><div class="sl">Hours logged</div><div class="sv">${Math.floor(totMin/60)}h</div></div>
+  </div>
+
+  <span class="slbl">All challenges</span>
+  <div class="card">`;
+
+  if (!challenges.length) {
+    h += `<div class="empty"><div class="ei">🏆</div><div class="et">No challenges yet</div><div class="es">Start your first challenge to build your history.</div></div>`;
+  } else {
+    challenges.forEach(c=>{
+      const sp = c.status==='active'?'pg-pill':c.status==='completed'?'pp':'pm';
+      h += `<div class="li-wrap" onclick="openChal('${c.id}')">
+        <div class="li-icon" style="background:var(--surface2);">${c.status==='completed'?'✅':c.status==='active'?'🔥':'❌'}</div>
+        <div class="li-body">
+          <div class="li-t">${esc(c.goal.length>35?c.goal.slice(0,35)+'…':c.goal)}</div>
+          <div class="li-s">${c.duration} days · $${c.dep} · ${c.gt}</div>
+        </div>
+        <span class="pill ${sp}">${c.status}</span>
+      </div>`;
+    });
+  }
+  h += `</div>`;
+  document.getElementById('prof-body').innerHTML = h;
+}
+
+/* ============================================================
+   🛠 HELPERS
+   ============================================================ */
+function toast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 2800);
+}
+
+function greet() {
+  const h = new Date().getHours();
+  return h<12?'morning':h<17?'afternoon':'evening';
+}
+
+function daysSince(ts) {
+  if (!ts) return 1;
+  const d = ts.seconds ? new Date(ts.seconds*1000) : new Date(ts);
+  return Math.max(1, Math.floor((Date.now()-d.getTime())/(86400000)));
+}
+
+function fmtDate(ts) {
+  if (!ts) return '';
+  const d = ts.seconds ? new Date(ts.seconds*1000) : new Date(ts);
+  return d.toLocaleDateString('en-US',{month:'short',day:'numeric'});
+}
+
+function esc(s) {
+  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+</script>
+</body>
+</html>
