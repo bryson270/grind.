@@ -3,173 +3,292 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>Ante Up</title>
+<title>Grind — Fitness Accountability</title>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
-:root{--bk:#080808;--s1:#111;--s2:#1a1a1a;--bd:#252525;--pu:#a78bfa;--pd:#2a1a3a;--gn:#4ade80;--gd:#1e3a2a;--go:#fbbf24;--od:#2e2610;--rd:#f87171;--bl:#60a5fa;--wh:#fff;--tx:#e5e5e5;--mt:#666;}
+:root{
+  --bg:#f7f7f5;--s1:#fff;--s2:#f0f0ec;--bd:#e8e8e4;
+  --gn:#5a9e1a;--gnd:#3d7010;--gnl:#e8f5d8;--gnll:#f0f9e8;
+  --go:#c07010;--god:#8a4f08;--gol:#fff8e8;
+  --rd:#e24b4a;--rdl:#fff0f0;
+  --tx:#1a1a1a;--mt:#aaa;--mt2:#555;
+  --wh:#fff;
+}
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
-html,body{height:100%;background:var(--bk);overflow-x:hidden;}
+html,body{height:100%;background:#eee;overflow-x:hidden;}
 body{font-family:'DM Sans',sans-serif;font-size:15px;color:var(--tx);display:flex;justify-content:center;-webkit-tap-highlight-color:transparent;}
-#app{width:100%;max-width:430px;min-height:100vh;background:var(--bk);position:relative;padding-bottom:80px;}
+#app{width:100%;max-width:430px;min-height:100vh;background:var(--bg);position:relative;padding-bottom:80px;}
 .sc{display:none;}.sc.on{display:block;animation:fi .18s ease;}
 @keyframes fi{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
-#ld{position:fixed;inset:0;background:var(--bk);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:14px;z-index:9999;}
-.sp{width:26px;height:26px;border-radius:50%;border:2px solid var(--bd);border-top-color:var(--pu);animation:spin .7s linear infinite;}
+#ld{position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:14px;z-index:9999;}
+.sp{width:26px;height:26px;border-radius:50%;border:2px solid var(--bd);border-top-color:var(--gn);animation:spin .7s linear infinite;}
 @keyframes spin{to{transform:rotate(360deg)}}
-#toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:var(--s2);border:0.5px solid var(--bd);border-radius:20px;padding:9px 18px;font-size:13px;color:var(--tx);z-index:400;opacity:0;transition:opacity .25s;white-space:nowrap;pointer-events:none;max-width:300px;text-align:center;}
+#toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:var(--tx);border-radius:20px;padding:9px 18px;font-size:13px;color:#fff;z-index:400;opacity:0;transition:opacity .25s;white-space:nowrap;pointer-events:none;max-width:300px;text-align:center;}
 #toast.on{opacity:1;}
-.logo{font-family:'Syne',sans-serif;font-weight:800;font-size:22px;color:var(--wh);}.logo span{color:var(--pu);}
-.tbar{padding:50px 20px 13px;display:flex;align-items:center;justify-content:space-between;border-bottom:0.5px solid var(--bd);}
-.shdr{padding:50px 20px 13px;display:flex;align-items:center;gap:12px;border-bottom:0.5px solid var(--bd);}
-.stitle{font-family:'Syne',sans-serif;font-weight:700;font-size:19px;color:var(--wh);}
-.bk-btn{background:none;border:none;color:var(--pu);font-size:13px;cursor:pointer;padding:0;display:flex;align-items:center;gap:4px;}
+
+/* LOGO */
+.logo{font-family:'Syne',sans-serif;font-weight:800;font-size:22px;color:var(--tx);}
+.logo span{color:var(--gn);}
+
+/* HEADERS */
+.tbar{padding:50px 20px 13px;display:flex;align-items:center;justify-content:space-between;border-bottom:0.5px solid var(--bd);background:var(--s1);}
+.shdr{padding:50px 20px 13px;display:flex;align-items:center;gap:12px;border-bottom:0.5px solid var(--bd);background:var(--s1);}
+.stitle{font-family:'Syne',sans-serif;font-weight:700;font-size:18px;color:var(--tx);}
+.bk{background:none;border:none;color:var(--gn);font-size:13px;cursor:pointer;padding:0;display:flex;align-items:center;gap:4px;}
+
+/* PAGE */
 .pg{padding:16px 20px 24px;}
-.card{background:var(--s1);border:0.5px solid var(--bd);border-radius:16px;padding:15px;margin-bottom:11px;}
-.card.pu{border-color:rgba(167,139,250,.38);}.card.gn{border-color:rgba(74,222,128,.28);}.card.go{border-color:rgba(251,191,36,.3);}
-.card.tap{cursor:pointer;transition:opacity .15s;}.card.tap:active{opacity:.8;}
-.btn{width:100%;padding:13px;border:none;border-radius:12px;font-size:14px;font-family:'Syne',sans-serif;font-weight:700;cursor:pointer;transition:opacity .15s;margin-top:8px;display:block;text-align:center;}
-.btn:active{opacity:.85;}.btn-p{background:var(--pu);color:#000;}.btn-o{background:transparent;color:var(--pu);border:1px solid var(--pu);}
-.btn-g{background:var(--gd);color:var(--gn);border:0.5px solid rgba(74,222,128,.3);}.btn-r{background:transparent;color:var(--rd);border:1px solid var(--rd);}
-.btn-sm{width:auto;padding:7px 14px;font-size:12px;margin-top:0;border-radius:8px;}
-.ig{margin-bottom:13px;}.lbl{display:block;font-size:10px;color:var(--mt);text-transform:uppercase;letter-spacing:.06em;font-family:'DM Mono',monospace;margin-bottom:5px;}
-.inp{width:100%;background:var(--s2);border:0.5px solid var(--bd);border-radius:10px;padding:11px 13px;color:var(--wh);font-size:14px;font-family:'DM Sans',sans-serif;outline:none;transition:border-color .2s;-webkit-appearance:none;}
-.inp:focus{border-color:var(--pu);}.inp::placeholder{color:var(--mt);}
-textarea.inp{resize:none;height:76px;}
+
+/* CARDS */
+.card{background:var(--s1);border:0.5px solid var(--bd);border-radius:16px;padding:14px;margin-bottom:10px;}
+.card.gn{border-color:rgba(90,158,26,.3);background:var(--gnll);}
+.card.go{border-color:rgba(192,112,16,.25);background:var(--gol);}
+.card.rd{border-color:rgba(226,75,74,.2);background:var(--rdl);}
+.card.tap{cursor:pointer;transition:opacity .15s;}.card.tap:active{opacity:.82;}
+
+/* ===== BUTTONS — OPTION A ===== */
+/* Primary: solid green */
+.btn-p{width:100%;padding:13px;border:none;border-radius:12px;font-size:14px;font-family:'Syne',sans-serif;font-weight:700;cursor:pointer;display:block;text-align:center;background:var(--gn);color:#fff;margin-top:8px;transition:opacity .15s;}
+.btn-p:active{opacity:.85;}
+/* Secondary: light green */
+.btn-s{width:100%;padding:13px;border:none;border-radius:12px;font-size:14px;font-family:'Syne',sans-serif;font-weight:700;cursor:pointer;display:block;text-align:center;background:var(--gnl);color:var(--gnd);margin-top:8px;transition:opacity .15s;}
+.btn-s:active{opacity:.85;}
+/* Cancel: grey */
+.btn-c{width:100%;padding:13px;border:none;border-radius:12px;font-size:14px;font-family:'Syne',sans-serif;font-weight:700;cursor:pointer;display:block;text-align:center;background:var(--s2);color:var(--mt);margin-top:8px;transition:opacity .15s;}
+.btn-c:active{opacity:.85;}
+/* Danger: used only for quit */
+.btn-d{width:100%;padding:13px;border:none;border-radius:12px;font-size:14px;font-family:'Syne',sans-serif;font-weight:700;cursor:pointer;display:block;text-align:center;background:var(--rdl);color:var(--rd);margin-top:8px;transition:opacity .15s;}
+.btn-d:active{opacity:.85;}
+
+/* INPUTS */
+.ig{margin-bottom:13px;}
+.lbl{display:block;font-size:10px;color:var(--mt);text-transform:uppercase;letter-spacing:.06em;font-family:'DM Mono',monospace;margin-bottom:5px;}
+.inp{width:100%;background:var(--s2);border:0.5px solid var(--bd);border-radius:10px;padding:11px 13px;color:var(--tx);font-size:14px;font-family:'DM Sans',sans-serif;outline:none;transition:border-color .2s;-webkit-appearance:none;}
+.inp:focus{border-color:var(--gn);}
+.inp::placeholder{color:var(--mt);}
+textarea.inp{resize:none;height:72px;}
+
+/* CHOICES */
 .cr{display:flex;gap:6px;flex-wrap:wrap;}
-.cb{flex:1;min-width:58px;background:var(--s2);border:0.5px solid var(--bd);border-radius:10px;padding:9px 4px;color:var(--mt);font-size:12px;text-align:center;cursor:pointer;transition:all .15s;font-family:'DM Sans',sans-serif;line-height:1.3;user-select:none;}
-.cb:active{transform:scale(.97);}.cb.on{border-color:var(--pu);color:var(--pu);background:var(--pd);}
+.cb{flex:1;min-width:55px;background:var(--s2);border:0.5px solid var(--bd);border-radius:10px;padding:9px 4px;color:var(--mt);font-size:12px;text-align:center;cursor:pointer;transition:all .15s;line-height:1.3;user-select:none;}
+.cb:active{transform:scale(.97);}
+.cb.on{border-color:var(--gn);color:var(--gnd);background:var(--gnll);font-weight:500;}
+
+/* PILLS */
 .pill{font-size:10px;border-radius:20px;padding:3px 8px;font-family:'DM Mono',monospace;display:inline-block;white-space:nowrap;}
-.pp{background:var(--pd);color:var(--pu);}.gp{background:var(--gd);color:var(--gn);}.op{background:var(--od);color:var(--go);}.mp{background:var(--s2);color:var(--mt);}.rp{background:rgba(248,113,113,.15);color:var(--rd);}
+.gp{background:var(--gnl);color:var(--gnd);}
+.op{background:var(--gol);color:var(--god);}
+.mp{background:var(--s2);color:var(--mt);}
+.rp{background:var(--rdl);color:var(--rd);}
+
+/* STATS */
 .sg{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:11px;}
-.sb{background:var(--s2);border-radius:12px;padding:11px 13px;}.sl{font-size:10px;color:var(--mt);text-transform:uppercase;letter-spacing:.05em;font-family:'DM Mono',monospace;margin-bottom:3px;}
-.sv{font-size:18px;font-weight:500;color:var(--wh);}.sv.gn{color:var(--gn);}.sv.pu{color:var(--pu);}.sv.go{color:var(--go);}.sv.rd{color:var(--rd);}
-.pb-bg{background:var(--bd);border-radius:4px;height:5px;margin:6px 0 3px;}.pb{border-radius:4px;height:5px;background:var(--pu);}
-.li{display:flex;align-items:center;gap:11px;padding:11px 0;border-bottom:0.5px solid var(--bd);cursor:pointer;}.li:last-child{border-bottom:none;}
+.sb{background:var(--s2);border-radius:12px;padding:11px 13px;}
+.sl{font-size:10px;color:var(--mt);text-transform:uppercase;letter-spacing:.05em;font-family:'DM Mono',monospace;margin-bottom:3px;}
+.sv{font-size:18px;font-weight:600;color:var(--tx);}
+.sv.gn{color:var(--gn);}.sv.go{color:var(--go);}.sv.rd{color:var(--rd);}
+
+/* PROGRESS */
+.pb-bg{background:var(--bd);border-radius:4px;height:5px;margin:6px 0 3px;}
+.pb{border-radius:4px;height:5px;background:var(--gn);}
+
+/* LIST ITEMS */
+.li{display:flex;align-items:center;gap:11px;padding:11px 0;border-bottom:0.5px solid var(--bd);cursor:pointer;}
+.li:last-child{border-bottom:none;}
 .li-ic{width:34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:15px;}
-.li-b{flex:1;min-width:0;}.li-t{font-size:13px;font-weight:500;color:var(--wh);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}.li-s{font-size:11px;color:var(--mt);margin-top:1px;}
-.av{width:50px;height:50px;border-radius:50%;background:var(--pd);display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:700;color:var(--pu);font-family:'Syne',sans-serif;flex-shrink:0;}
-.empty{text-align:center;padding:32px 16px;color:var(--mt);}.ei{font-size:36px;margin-bottom:10px;opacity:.5;}.et{font-size:15px;font-weight:500;color:var(--tx);margin-bottom:5px;}.es{font-size:13px;line-height:1.55;}
-.note{background:var(--s2);border-left:3px solid var(--pu);border-radius:0 10px 10px 0;padding:11px 13px;font-size:13px;color:var(--mt);line-height:1.6;margin:10px 0;}
-.note.gn{border-left-color:var(--gn);}.note.go{border-left-color:var(--go);}.note.rd{border-left-color:var(--rd);}.note b{color:var(--tx);}
+.li-b{flex:1;min-width:0;}
+.li-t{font-size:13px;font-weight:500;color:var(--tx);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.li-s{font-size:11px;color:var(--mt);margin-top:1px;}
+
+/* AVATAR */
+.av{width:50px;height:50px;border-radius:50%;background:var(--gnl);display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:700;color:var(--gnd);font-family:'Syne',sans-serif;flex-shrink:0;}
+
+/* NOTE */
+.note{background:var(--gnll);border-left:3px solid var(--gn);border-radius:0 10px 10px 0;padding:11px 13px;font-size:13px;color:var(--mt2);line-height:1.6;margin:10px 0;}
+.note.go{border-left-color:var(--go);background:var(--gol);}
+.note.rd{border-left-color:var(--rd);background:var(--rdl);}
+.note b{color:var(--tx);}
+
+/* MISC */
 .row{display:flex;justify-content:space-between;align-items:center;}
 .slbl{font-size:10px;color:var(--mt);text-transform:uppercase;letter-spacing:.06em;font-family:'DM Mono',monospace;margin-bottom:8px;display:block;}
 .dv{border:none;border-top:0.5px solid var(--bd);margin:11px 0;}
-.pnum{font-family:'Syne',sans-serif;font-weight:800;font-size:40px;letter-spacing:-.02em;line-height:1;}
 .seg{display:flex;background:var(--s2);border-radius:10px;padding:3px;margin-bottom:12px;}
 .seg-b{flex:1;text-align:center;font-size:12px;padding:6px 0;border-radius:8px;color:var(--mt);cursor:pointer;transition:all .15s;}
-.seg-b.on{background:var(--pu);color:#fff;font-weight:600;}
-.wd{width:25px;height:25px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--mt);background:var(--s2);}
-.wd.done{background:var(--pu);color:#fff;}.wd.today{background:var(--pd);color:var(--pu);border:1px solid var(--pu);}
-.step-ind{display:flex;gap:4px;justify-content:center;margin-bottom:12px;}
-.sd{width:6px;height:6px;border-radius:50%;background:var(--bd);}.sd.on{background:var(--pu);width:16px;border-radius:4px;}
-.earn-box{background:var(--pd);border:1px solid rgba(167,139,250,.3);border-radius:13px;padding:12px;margin:8px 0;}
+.seg-b.on{background:var(--gn);color:#fff;font-weight:600;}
+.earn-box{background:var(--gnll);border:0.5px solid rgba(90,158,26,.3);border-radius:13px;padding:12px;margin:8px 0;}
+.step-ind{display:flex;gap:4px;justify-content:center;margin-bottom:13px;}
+.sd{width:6px;height:6px;border-radius:50%;background:var(--bd);}.sd.on{background:var(--gn);width:16px;border-radius:4px;}
 .trow{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:0.5px solid var(--bd);cursor:pointer;}.trow:last-child{border-bottom:none;}
 .chk{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
-.chk-on{background:var(--gd);border:1.5px solid var(--gn);}.chk-off{background:var(--s2);border:1.5px solid var(--bd);}
+.chk-on{background:var(--gnl);border:1.5px solid var(--gn);}
+.chk-off{background:var(--s2);border:1.5px solid var(--bd);}
 .podrow{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:0.5px solid var(--bd);}.podrow:last-child{border-bottom:none;}
-.bar-wrap{display:flex;align-items:flex-end;gap:3px;height:56px;margin:10px 0 4px;}
-.bar-col{display:flex;flex-direction:column;align-items:center;flex:1;}
-.bar{border-radius:4px 4px 0 0;width:100%;}
-.blbl{font-size:8px;color:var(--mt);margin-top:2px;}
-input[type=range]{width:100%;accent-color:var(--pu);}
-#tabbar{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:430px;background:rgba(8,8,8,.95);backdrop-filter:blur(20px);border-top:0.5px solid var(--bd);display:none;justify-content:space-around;padding:10px 0 18px;z-index:100;}
+.goal-opt{background:var(--s1);border:1.5px solid var(--bd);border-radius:14px;padding:12px 13px;margin-bottom:8px;cursor:pointer;display:flex;align-items:center;gap:11px;transition:all .15s;}
+.goal-opt.on{border-color:var(--gn);background:var(--gnll);}
+.goal-opt:active{opacity:.85;}
+.chk-circle{width:20px;height:20px;border-radius:50%;border:1.5px solid var(--bd);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-left:auto;}
+.chk-circle.on{background:var(--gn);border-color:var(--gn);}
+.quit-opt{background:var(--s1);border:1.5px solid var(--bd);border-radius:12px;padding:11px 13px;margin-bottom:7px;cursor:pointer;display:flex;align-items:center;gap:10px;transition:all .15s;}
+.quit-opt.on{border-color:var(--gn);background:var(--gnll);}
+.quit-opt:active{opacity:.85;}
+.cam-box{background:#1a1a1a;border-radius:14px;height:160px;display:flex;flex-direction:column;align-items:center;justify-content:center;margin:10px 0;position:relative;overflow:hidden;}
+.cam-ring{width:72px;height:72px;border-radius:50%;border:3px solid var(--gn);display:flex;align-items:center;justify-content:center;}
+.cam-inner{width:56px;height:56px;border-radius:50%;background:rgba(90,158,26,.2);display:flex;align-items:center;justify-content:center;}
+.ai-row{display:flex;align-items:center;gap:9px;padding:8px 0;border-bottom:0.5px solid var(--bd);}
+.ai-row:last-child{border-bottom:none;}
+.ai-ic{width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:11px;}
+.ai-ok{background:var(--gnl);color:var(--gnd);}
+.ai-bad{background:var(--rdl);color:var(--rd);}
+.ai-wait{background:var(--s2);color:var(--mt);}
+input[type=range]{width:100%;accent-color:var(--gn);}
+
+/* TAB BAR */
+#tabbar{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:430px;background:rgba(247,247,245,.96);backdrop-filter:blur(20px);border-top:0.5px solid var(--bd);display:none;justify-content:space-around;padding:10px 0 18px;z-index:100;}
 #tabbar.on{display:flex;}
 .ti{display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;padding:0 12px;color:var(--mt);transition:color .15s;}
-.ti.on{color:var(--pu);}.ti-ic{font-size:21px;}.ti-lb{font-size:9px;}
+.ti.on{color:var(--gn);}.ti-ic{font-size:21px;}.ti-lb{font-size:9px;}
 </style>
 </head>
 <body>
-<div id="ld"><div class="logo" style="font-size:28px;">ante<span>up</span></div><div class="sp"></div></div>
+
+<div id="ld"><div class="logo" style="font-size:28px;">grind<span>.</span></div><div class="sp"></div></div>
 <div id="toast"></div>
 <div id="app">
 
-<div class="sc" id="s-login">
-  <div style="padding:62px 24px 40px;">
-    <div class="logo" style="margin-bottom:28px;">ante<span>up</span></div>
-    <h1 style="font-family:'Syne',sans-serif;font-weight:800;font-size:36px;color:var(--wh);line-height:1.0;letter-spacing:-.02em;">Lock in.<br>Put money<br><span style="color:var(--pu);">on the line.</span></h1>
-    <p style="font-size:14px;color:var(--mt);margin:14px 0 32px;line-height:1.6;">Real accountability — real money on the line.</p>
-    <div class="ig"><label class="lbl">Email</label><input type="email" class="inp" id="a-em" placeholder="your@email.com"></div>
-    <div class="ig" id="a-nw" style="display:none;"><label class="lbl">Your name</label><input type="text" class="inp" id="a-nm" placeholder="Jordan Kim"></div>
-    <div class="ig"><label class="lbl">Password</label><input type="password" class="inp" id="a-pw" placeholder="••••••••"></div>
-    <button class="btn btn-p" id="a-btn" onclick="doAuth()">Sign in</button>
-    <button class="btn btn-o" id="a-tog" onclick="togAuth()" style="margin-top:6px;">Don't have an account? Sign up</button>
-    <p style="font-size:11px;color:var(--mt);text-align:center;margin-top:18px;line-height:1.6;">Deposits secured by Stripe. We never store card details.</p>
+<!-- ONBOARDING: FACE SCAN -->
+<div class="sc" id="s-face">
+  <div style="padding:60px 24px 40px;text-align:center;">
+    <div class="logo" style="font-size:28px;margin-bottom:8px;">grind<span>.</span></div>
+    <p style="font-size:13px;color:var(--mt);margin-bottom:32px;">fitness accountability with real stakes</p>
+    <div style="width:64px;height:64px;border-radius:20px;background:var(--gnl);display:flex;align-items:center;justify-content:center;margin:0 auto 16px;font-size:30px;">💪</div>
+    <p style="font-size:17px;font-weight:700;color:var(--tx);margin-bottom:8px;">Before you start</p>
+    <p style="font-size:13px;color:var(--mt);line-height:1.65;margin-bottom:24px;">We need a 5-second face scan to verify your identity. This keeps the pot fair — nobody can cheat or create fake accounts.</p>
+    <div class="card" style="text-align:left;margin-bottom:20px;">
+      <div style="display:flex;align-items:center;gap:11px;padding:9px 0;border-bottom:0.5px solid var(--bd);">
+        <div style="width:32px;height:32px;border-radius:50%;background:var(--gn);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;flex-shrink:0;">1</div>
+        <div><p style="font-size:13px;font-weight:500;color:var(--tx);">5-second face scan</p><p style="font-size:11px;color:var(--mt);">front camera · takes 5 seconds</p></div>
+      </div>
+      <div style="display:flex;align-items:center;gap:11px;padding:9px 0;border-bottom:0.5px solid var(--bd);">
+        <div style="width:32px;height:32px;border-radius:50%;background:var(--s2);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--mt);flex-shrink:0;">2</div>
+        <div><p style="font-size:13px;color:var(--mt);">Create account</p><p style="font-size:11px;color:var(--mt);">email + password</p></div>
+      </div>
+      <div style="display:flex;align-items:center;gap:11px;padding:9px 0;">
+        <div style="width:32px;height:32px;border-radius:50%;background:var(--s2);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--mt);flex-shrink:0;">3</div>
+        <div><p style="font-size:13px;color:var(--mt);">Start grinding</p><p style="font-size:11px;color:var(--mt);">join a challenge</p></div>
+      </div>
+    </div>
+    <button class="btn-p" onclick="startFaceScan()">allow camera access</button>
+    <p style="font-size:11px;color:var(--mt);margin-top:12px;line-height:1.6;">Your face data is encrypted and never shared or sold.</p>
   </div>
 </div>
 
+<!-- FACE SCANNING -->
+<div class="sc" id="s-scanning">
+  <div style="padding:60px 24px 40px;text-align:center;">
+    <p style="font-size:16px;font-weight:700;color:var(--tx);margin-bottom:4px;">Look at the camera</p>
+    <p style="font-size:12px;color:var(--mt);margin-bottom:16px;">Hold still for 5 seconds</p>
+    <div class="cam-box">
+      <div style="position:absolute;top:10px;left:10px;"><span class="pill rp" style="font-size:9px;">● REC</span></div>
+      <div class="cam-ring"><div class="cam-inner"><span style="font-size:30px;font-weight:700;color:var(--gn);" id="face-timer">5</span></div></div>
+      <div style="display:flex;align-items:center;gap:6px;margin-top:10px;">
+        <div style="width:6px;height:6px;border-radius:50%;background:var(--gn);"></div>
+        <p style="font-size:10px;color:var(--gn);">scanning face...</p>
+      </div>
+    </div>
+    <div style="background:var(--bd);border-radius:4px;height:4px;margin:10px 0 6px;"><div id="face-prog" style="background:var(--gn);border-radius:4px;height:4px;width:0%;transition:width .3s;"></div></div>
+    <p style="font-size:11px;color:var(--mt);margin-bottom:20px;">Keep your face centered</p>
+    <button class="btn-c" onclick="cancelScan()">cancel</button>
+  </div>
+</div>
+
+<!-- FACE VERIFIED -->
+<div class="sc" id="s-face-done">
+  <div style="padding:60px 24px 40px;text-align:center;">
+    <div style="width:64px;height:64px;border-radius:50%;background:var(--gnl);display:flex;align-items:center;justify-content:center;margin:0 auto 14px;font-size:28px;">✅</div>
+    <p style="font-size:17px;font-weight:700;color:var(--tx);margin-bottom:6px;">Face verified</p>
+    <p style="font-size:12px;color:var(--mt);margin-bottom:20px;">Identity locked in. Nobody else can use your account.</p>
+    <div class="card gn" style="text-align:left;margin-bottom:16px;">
+      <div class="ai-row"><div class="ai-ic ai-ok">✓</div><div style="flex:1;"><p style="font-size:12px;font-weight:500;color:var(--tx);">Real person detected</p><p style="font-size:10px;color:var(--mt);">not a photo or screen</p></div><span class="pill gp">pass</span></div>
+      <div class="ai-row"><div class="ai-ic ai-ok">✓</div><div style="flex:1;"><p style="font-size:12px;font-weight:500;color:var(--tx);">Unique face</p><p style="font-size:10px;color:var(--mt);">no duplicate account</p></div><span class="pill gp">pass</span></div>
+      <div class="ai-row"><div class="ai-ic ai-ok">✓</div><div style="flex:1;"><p style="font-size:12px;font-weight:500;color:var(--tx);">Face profile saved</p><p style="font-size:10px;color:var(--mt);">encrypted · never shared</p></div><span class="pill gp">done</span></div>
+    </div>
+    <button class="btn-p" onclick="show('login');document.getElementById('tabbar').classList.remove('on');">create your account</button>
+  </div>
+</div>
+
+<!-- LOGIN -->
+<div class="sc" id="s-login">
+  <div style="padding:56px 24px 40px;">
+    <div class="logo" style="margin-bottom:6px;">grind<span>.</span></div>
+    <p style="font-size:13px;color:var(--mt);margin-bottom:28px;">face verified · create your account</p>
+    <div class="ig"><label class="lbl">Your name</label><input type="text" class="inp" id="a-nm" placeholder="Jordan Kim"></div>
+    <div class="ig"><label class="lbl">Email</label><input type="email" class="inp" id="a-em" placeholder="you@email.com"></div>
+    <div class="ig" id="a-pw-wrap"><label class="lbl">Password</label><input type="password" class="inp" id="a-pw" placeholder="••••••••"></div>
+    <div style="background:var(--gnl);border-radius:10px;padding:9px 11px;display:flex;align-items:center;gap:8px;margin-bottom:10px;">
+      <span style="font-size:14px;">🛡</span><p style="font-size:11px;color:var(--gnd);">Face verified · your identity is secured</p>
+    </div>
+    <button class="btn-p" id="a-btn" onclick="doAuth()">create account</button>
+    <button class="btn-s" id="a-tog" onclick="togAuth()" style="margin-top:6px;">already have an account? sign in</button>
+    <p style="font-size:11px;color:var(--mt);text-align:center;margin-top:14px;line-height:1.6;">Deposits secured by Stripe. We never store card details.</p>
+  </div>
+</div>
+
+<!-- PROFILE -->
 <div class="sc" id="s-profile">
-  <div class="tbar"><div class="logo">ante<span>up</span></div><button class="btn btn-o btn-sm" onclick="doSignOut()" style="width:auto;">Sign out</button></div>
+  <div class="tbar"><div class="logo">grind<span>.</span></div><button class="btn-c btn-sm" onclick="doSignOut()" style="width:auto;padding:7px 14px;font-size:12px;margin-top:0;border-radius:8px;">sign out</button></div>
   <div class="pg" id="prof-body"></div>
 </div>
 
+<!-- CHALLENGES -->
 <div class="sc" id="s-challenges">
-  <div class="tbar"><div class="logo">ante<span>up</span></div><span class="pill gp" id="streak-pill">0 streak</span></div>
+  <div class="tbar"><div class="logo">grind<span>.</span></div><span class="pill gp" id="streak-pill">0 streak</span></div>
   <div class="pg" id="chal-body"></div>
 </div>
 
+<!-- CHALLENGE DETAIL -->
 <div class="sc" id="s-cdet">
-  <div class="shdr"><button class="bk-btn" onclick="goTab('challenges')">← back</button><div class="stitle">Challenge</div></div>
+  <div class="shdr"><button class="bk" onclick="goTab('challenges')">← back</button><div class="stitle">Challenge</div></div>
   <div class="pg" id="cdet-body"></div>
 </div>
 
+<!-- EARNINGS CALC -->
 <div class="sc" id="s-calc">
-  <div class="shdr"><button class="bk-btn" onclick="goTab('challenges')">← back</button><div class="stitle">Earnings calculator</div></div>
+  <div class="shdr"><button class="bk" onclick="goTab('challenges')">← back</button><div class="stitle">Earnings</div></div>
   <div class="pg" id="calc-body"></div>
 </div>
 
+<!-- NEW CHALLENGE -->
 <div class="sc" id="s-new">
-  <div class="shdr"><button class="bk-btn" onclick="goTab('challenges')">← back</button><div class="stitle">New challenge</div></div>
-  <div class="pg">
-    <div class="ig"><label class="lbl">Your goal</label><textarea class="inp" id="nc-goal" placeholder="e.g. Launch my Shopify store, build my app MVP..."></textarea></div>
-    <div class="ig"><label class="lbl">Duration</label><div class="cr"><div class="cb" data-g="dur" data-v="30" onclick="pick(this)">30 days</div><div class="cb" data-g="dur" data-v="60" onclick="pick(this)">60 days</div><div class="cb" data-g="dur" data-v="90" onclick="pick(this)">90 days</div></div></div>
-    <div class="ig"><label class="lbl">Goal type</label><div class="cr">
-      <div class="cb" data-g="gt" data-v="progress" onclick="pick(this)"><div style="font-weight:500;">Progress</div><div style="font-size:10px;color:var(--mt);margin-top:2px;">Buy-in protected</div></div>
-      <div class="cb" data-g="gt" data-v="profit" onclick="pick(this)"><div style="font-weight:500;">Profit</div><div style="font-size:10px;color:var(--mt);margin-top:2px;">Win the pot</div></div>
-    </div></div>
-    <div class="ig"><label class="lbl">Deposit amount</label><div class="cr"><div class="cb" data-g="dep" data-v="25" onclick="pick(this)">$25</div><div class="cb" data-g="dep" data-v="50" onclick="pick(this)">$50</div><div class="cb" data-g="dep" data-v="100" onclick="pick(this)">$100</div></div></div>
-    <div class="ig"><label class="lbl">If I quit, donate to...</label><div class="cr">
-      <div class="cb" data-g="ch" data-v="Trees for the Future" onclick="pick(this)">🌳 Trees</div>
-      <div class="cb" data-g="ch" data-v="St. Jude's" onclick="pick(this)">🏥 St. Jude's</div>
-      <div class="cb" data-g="ch" data-v="Red Cross" onclick="pick(this)">❤️ Red Cross</div>
-    </div></div>
-    <div id="nc-msg" style="display:none;" class="note go"></div>
-    <button class="btn btn-p" onclick="startChallenge()">Lock in — pay deposit</button>
-    <div class="note" style="margin-top:12px;"><b>Progress goal:</b> Deposit returned if you complete weekly sessions — even if you don't profit yet.<br><br><b>Profit goal:</b> Hit your revenue target and win a share of the pot.</div>
-  </div>
+  <div class="shdr"><button class="bk" onclick="goTab('challenges')">← back</button><div class="stitle">New challenge</div></div>
+  <div class="pg" id="new-body"></div>
 </div>
 
-<div class="sc" id="s-sess">
-  <div class="shdr"><button class="bk-btn" onclick="goTab('challenges')">← back</button><div class="stitle">Log session</div></div>
-  <div class="pg">
-    <div id="sess-banner"></div>
-    <div class="ig"><label class="lbl">Duration</label><div class="cr"><div class="cb" data-g="sd" data-v="30" onclick="pick(this)">30 min</div><div class="cb" data-g="sd" data-v="60" onclick="pick(this)">1 hr</div><div class="cb" data-g="sd" data-v="90" onclick="pick(this)">90 min</div><div class="cb" data-g="sd" data-v="120" onclick="pick(this)">2 hrs</div></div></div>
-    <div class="ig"><label class="lbl">What did you work on?</label><textarea class="inp" id="sess-notes" placeholder="e.g. Built the login screen, wrote 5 product descriptions..."></textarea></div>
-    <div class="ig"><label class="lbl">Session result</label><div class="cr"><div class="cb" data-g="sc" data-v="yes" onclick="pick(this)">✓ Completed</div><div class="cb" data-g="sc" data-v="no" onclick="pick(this)">✗ Cut short</div></div></div>
-    <button class="btn btn-p" onclick="logSession()">Save session</button>
-  </div>
+<!-- VIDEO VERIFICATION -->
+<div class="sc" id="s-video">
+  <div class="shdr"><button class="bk" onclick="goTab('challenges')">← back</button><div class="stitle">Verify workout</div></div>
+  <div class="pg" id="video-body"></div>
 </div>
 
+<!-- PRIVATE -->
 <div class="sc" id="s-private">
-  <div class="tbar"><div class="logo">ante<span>up</span></div></div>
+  <div class="tbar"><div class="logo">grind<span>.</span></div></div>
   <div class="pg" id="priv-body"></div>
 </div>
 
+<!-- MY MATCHES -->
 <div class="sc" id="s-matches">
-  <div class="tbar"><div class="logo">ante<span>up</span></div></div>
+  <div class="tbar"><div class="logo">grind<span>.</span></div></div>
   <div class="pg" id="match-body"></div>
 </div>
 
-<div class="sc" id="s-mdet">
-  <div class="shdr"><button class="bk-btn" onclick="goTab('matches')">← back</button><div class="stitle" id="mdet-ttl">Match</div></div>
-  <div class="pg" id="mdet-body"></div>
 </div>
 
-</div>
 <div id="tabbar">
   <div class="ti on" onclick="goTab('profile')" data-tab="profile"><div class="ti-ic">👤</div><div class="ti-lb">profile</div></div>
   <div class="ti" onclick="goTab('challenges')" data-tab="challenges"><div class="ti-ic">🏆</div><div class="ti-lb">challenges</div></div>
   <div class="ti" onclick="goTab('private')" data-tab="private"><div class="ti-ic">🔒</div><div class="ti-lb">private</div></div>
-  <div class="ti" onclick="goTab('matches')" data-tab="matches"><div class="ti-ic">⚡</div><div class="ti-lb">my matches</div></div>
+  <div class="ti" onclick="goTab('matches')" data-tab="matches"><div class="ti-ic">⚡</div><div class="ti-lb">matches</div></div>
 </div>
 
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
@@ -177,9 +296,9 @@ input[type=range]{width:100%;accent-color:var(--pu);}
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 <script>
 // ============================================================
-// YOUR FIREBASE CONFIG — ALREADY FILLED IN
+// FIREBASE CONFIG — ALREADY SET UP
 // ============================================================
-const FB = {
+const FB={
   apiKey:"AIzaSyDaxvIxnazhoZWBIMa10sD8G7c50dKFZAM",
   authDomain:"ante-up-c264e.firebaseapp.com",
   projectId:"ante-up-c264e",
@@ -189,61 +308,67 @@ const FB = {
 };
 
 // ============================================================
-// STRIPE PAYMENT LINKS — ADD YOURS HERE
-// Go to dashboard.stripe.com > Products > create $25/$50/$100
-// products > copy each Payment Link > paste below
+// STRIPE — ADD YOUR LINKS HERE WHEN READY
+// dashboard.stripe.com > Products > create $25/$50/$100
 // ============================================================
-const STRIPE = {
-  '25': 'https://buy.stripe.com/YOUR_$25_LINK',
-  '50': 'https://buy.stripe.com/YOUR_$50_LINK',
+const STRIPE={
+  '25':'https://buy.stripe.com/YOUR_$25_LINK',
+  '50':'https://buy.stripe.com/YOUR_$50_LINK',
   '100':'https://buy.stripe.com/YOUR_$100_LINK'
 };
 
-// ============================================================
-// INIT
-// ============================================================
 firebase.initializeApp(FB);
-const auth = firebase.auth();
-const db   = firebase.firestore();
-const FV   = firebase.firestore.FieldValue;
+const auth=firebase.auth(), db=firebase.firestore(), FV=firebase.firestore.FieldValue;
 
 // ============================================================
 // STATE
 // ============================================================
-let me=null, meData=null, myChallenges=[], mySessions=[];
-let pubData={}, myMatches=[], leaderboard=[];
-let picks={}, signUp=false;
-let V={tab:'profile',sub:null,ct:0,ps:0,pp:{},calcId:null,drop:35,profOpen:false,selChal:null,selMatch:null};
+let me=null,meData=null,myChallenges=[],mySessions=[],pubData={},myMatches=[],leaderboard=[];
+let picks={},signUp=true;
+let V={sub:null,ct:0,ps:0,pp:{},drop:30,calcId:null,profOpen:false,selChal:null,nStep:1,nGoal:null,nFreq:null,nDur:null,nDep:null,nQuit:null,vStep:0};
 let tasks={t1:true,t2:true,t3:false,t4:false};
+let faceTimer=null,faceCount=5;
 
-// Public challenge seed data
-const PUB_SEEDS = [
-  {id:'empire',name:'90-day empire builder',desc:'Launch or grow your business.',buyin:100,basePot:48200,baseMembers:482,duration:90},
-  {id:'grind', name:'60-day founder grind', desc:'Ship your MVP. No member cap.',buyin:50, basePot:12350,baseMembers:247,duration:60},
-  {id:'sprint',name:'30-day starter sprint',desc:'Validate your idea.',          buyin:25, basePot:3125, baseMembers:125,duration:30}
+// Goal types
+const GOALS=[
+  {id:'burn',ic:'🔥',name:'Lose weight / burn fat',sub:'Cardio & calorie goals',ibg:'#fff5e8',
+   verify:'Auto-verified by Apple Health or Google Fit',freqs:['3x/wk','4x/wk','5x/wk','Daily'],fl:'Workouts per week',hasPot:true},
+  {id:'muscle',ic:'💪',name:'Build muscle / gain weight',sub:'Strength training goals',ibg:'#eeeeff',
+   verify:'Strength sessions — 30+ min, elevated heart rate',freqs:['3x/wk','4x/wk','5x/wk','6x/wk'],fl:'Strength sessions per week',hasPot:true},
+  {id:'active',ic:'🚶',name:'Active lifestyle / steps',sub:'Daily movement goals',ibg:'#e8fbe8',
+   verify:'Step count tracked 24/7 automatically',freqs:['6k/day','8k/day','10k/day','12k/day'],fl:'Daily step target',hasPot:true},
+  {id:'custom',ic:'⭐',name:'Custom goal',sub:'You set the target',ibg:'#f5eeff',
+   verify:'Weekly photo check-in reviewed by community',freqs:['1x/wk','2x/wk','3x/wk','Daily'],fl:'Check-in frequency',hasPot:false},
+];
+
+// Public challenges
+const PUB=[
+  {id:'burn30',name:'30-day burn challenge',g:'burn',buyin:50,pot:24500,members:245,drop:30,dur:30},
+  {id:'beast60',name:'60-day beast mode',g:'muscle',buyin:100,pot:38200,members:191,drop:35,dur:60},
+  {id:'steps14',name:'14-day step challenge',g:'active',buyin:25,pot:8750,members:175,drop:20,dur:14},
 ];
 
 // ============================================================
 // AUTH
 // ============================================================
-auth.onAuthStateChanged(async u => {
-  if (u) {
-    me = u;
-    await Promise.all([loadUser(), loadChallenges(), loadSessions(), loadPubChallenges(), loadMyMatches(), loadLeaderboard()]);
-    hideLd();
-    goTab('profile');
-  } else {
-    me = null; hideLd();
-    show('login');
+auth.onAuthStateChanged(async u=>{
+  if(u){
+    me=u;
+    await Promise.all([loadUser(),loadChallenges(),loadSessions(),loadPub(),loadMatches(),loadLeaderboard()]);
+    hideLd(); goTab('profile');
+  }else{
+    me=null; hideLd();
+    show('face');
     document.getElementById('tabbar').classList.remove('on');
   }
 });
 
 function togAuth(){
   signUp=!signUp;
-  document.getElementById('a-btn').textContent = signUp?'Create account':'Sign in';
-  document.getElementById('a-tog').textContent = signUp?'Already have an account? Sign in':"Don't have an account? Sign up";
-  document.getElementById('a-nw').style.display = signUp?'block':'none';
+  document.getElementById('a-btn').textContent=signUp?'create account':'sign in';
+  document.getElementById('a-tog').textContent=signUp?'already have an account? sign in':"don't have an account? sign up";
+  document.getElementById('a-pw-wrap').style.display=signUp?'block':'none';
+  document.getElementById('a-nm').parentElement.style.display=signUp?'block':'none';
 }
 
 async function doAuth(){
@@ -257,7 +382,7 @@ async function doAuth(){
       const c=await auth.createUserWithEmailAndPassword(em,pw);
       await db.collection('users').doc(c.user.uid).set({
         name:nm,email:em,streak:0,level:1,
-        totalDeposited:0,totalReturned:0,
+        totalDeposited:0,totalReturned:0,faceVerified:true,
         joinedAt:FV.serverTimestamp()
       });
     }else{
@@ -265,116 +390,101 @@ async function doAuth(){
     }
   }catch(e){
     const m={'auth/user-not-found':'No account with that email','auth/wrong-password':'Wrong password','auth/email-already-in-use':'Account exists — sign in','auth/weak-password':'Password needs 6+ characters','auth/invalid-email':'Invalid email'};
-    toast(m[e.code]||'Something went wrong: '+e.message);
+    toast(m[e.code]||'Something went wrong');
   }
 }
 
 async function doSignOut(){await auth.signOut();}
 
 // ============================================================
-// DATA LOADING
+// FACE SCAN
+// ============================================================
+function startFaceScan(){
+  faceCount=5;
+  show('scanning');
+  document.getElementById('tabbar').classList.remove('on');
+  clearInterval(faceTimer);
+  faceTimer=setInterval(()=>{
+    faceCount--;
+    const t=document.getElementById('face-timer');
+    const p=document.getElementById('face-prog');
+    if(t) t.textContent=faceCount;
+    if(p) p.style.width=Math.round((5-faceCount)/5*100)+'%';
+    if(faceCount<=0){
+      clearInterval(faceTimer);
+      faceCount=5;
+      show('face-done');
+    }
+  },1000);
+}
+
+function cancelScan(){clearInterval(faceTimer);faceCount=5;show('face');}
+
+// ============================================================
+// DATA
 // ============================================================
 async function loadUser(){
-  try{
-    const d=await db.collection('users').doc(me.uid).get();
-    meData=d.exists?d.data():{name:me.email.split('@')[0],streak:0,level:1,totalDeposited:0,totalReturned:0};
-  }catch(e){meData={name:me.email.split('@')[0],streak:0,level:1,totalDeposited:0,totalReturned:0};}
+  try{const d=await db.collection('users').doc(me.uid).get();meData=d.exists?d.data():{name:me.email.split('@')[0],streak:0,level:1,totalDeposited:0,totalReturned:0};}
+  catch(e){meData={name:me.email.split('@')[0],streak:0,level:1,totalDeposited:0,totalReturned:0};}
 }
-
 async function loadChallenges(){
-  try{
-    const q=await db.collection('userChallenges').where('uid','==',me.uid).get();
-    myChallenges=q.docs.map(d=>({id:d.id,...d.data()}))
-      .sort((a,b)=>(b.createdAt?.seconds||0)-(a.createdAt?.seconds||0));
-  }catch(e){myChallenges=[];}
+  try{const q=await db.collection('challenges').where('uid','==',me.uid).get();myChallenges=q.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(b.createdAt?.seconds||0)-(a.createdAt?.seconds||0));}
+  catch(e){myChallenges=[];}
 }
-
 async function loadSessions(){
-  try{
-    const q=await db.collection('sessions').where('uid','==',me.uid).get();
-    mySessions=q.docs.map(d=>({id:d.id,...d.data()}))
-      .sort((a,b)=>(b.createdAt?.seconds||0)-(a.createdAt?.seconds||0));
-  }catch(e){mySessions=[];}
+  try{const q=await db.collection('sessions').where('uid','==',me.uid).get();mySessions=q.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(b.createdAt?.seconds||0)-(a.createdAt?.seconds||0));}
+  catch(e){mySessions=[];}
 }
-
-async function loadPubChallenges(){
+async function loadPub(){
   try{
-    // Seed public challenges if they don't exist
-    for(const s of PUB_SEEDS){
+    for(const s of PUB){
       const ref=db.collection('publicChallenges').doc(s.id);
       const d=await ref.get();
-      if(!d.exists){
-        await ref.set({...s,pot:s.basePot,memberCount:s.baseMembers,daysLeft:s.duration,status:'open'});
-      }
-      const fresh=await ref.get();
-      pubData[s.id]=fresh.data();
+      if(!d.exists) await ref.set({...s,status:'open'});
+      const f=await ref.get();
+      pubData[s.id]=f.data();
     }
-  }catch(e){
-    // Use seed data as fallback
-    PUB_SEEDS.forEach(s=>{pubData[s.id]={...s,pot:s.basePot,memberCount:s.baseMembers,daysLeft:s.duration};});
-  }
+  }catch(e){PUB.forEach(s=>{pubData[s.id]={...s};});}
 }
-
-async function loadMyMatches(){
-  try{
-    const q=await db.collection('privateMatches').where('hostUid','==',me.uid).get();
-    myMatches=q.docs.map(d=>({id:d.id,...d.data()}))
-      .sort((a,b)=>(b.createdAt?.seconds||0)-(a.createdAt?.seconds||0));
-  }catch(e){myMatches=[];}
+async function loadMatches(){
+  try{const q=await db.collection('privateMatches').where('hostUid','==',me.uid).get();myMatches=q.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(b.createdAt?.seconds||0)-(a.createdAt?.seconds||0));}
+  catch(e){myMatches=[];}
 }
-
 async function loadLeaderboard(){
-  try{
-    const q=await db.collection('users').get();
-    leaderboard=q.docs.map(d=>({uid:d.id,...d.data()}))
-      .sort((a,b)=>(b.streak||0)-(a.streak||0))
-      .slice(0,20);
-  }catch(e){leaderboard=[];}
+  try{const q=await db.collection('users').get();leaderboard=q.docs.map(d=>({uid:d.id,...d.data()})).sort((a,b)=>(b.streak||0)-(a.streak||0)).slice(0,15);}
+  catch(e){leaderboard=[];}
 }
 
 // ============================================================
-// NAVIGATION
+// NAV
 // ============================================================
-function show(n){
-  document.querySelectorAll('.sc').forEach(s=>s.classList.remove('on'));
-  document.getElementById('s-'+n).classList.add('on');
-}
-
+function show(n){document.querySelectorAll('.sc').forEach(s=>s.classList.remove('on'));document.getElementById('s-'+n).classList.add('on');}
 function goTab(n){
   show(n);
   document.querySelectorAll('.ti').forEach(t=>t.classList.toggle('on',t.dataset.tab===n));
   document.getElementById('tabbar').classList.add('on');
-  V.tab=n; V.sub=null;
+  V.sub=null;V.ct=0;
   window.scrollTo(0,0);
-  if(n==='profile')   renderProf();
-  if(n==='challenges'){loadPubChallenges().then(renderChal);}
-  if(n==='private')   renderPriv();
-  if(n==='matches')   renderMatches();
+  if(n==='profile') renderProf();
+  if(n==='challenges'){loadPub().then(renderChal);}
+  if(n==='private') renderPriv();
+  if(n==='matches') renderMatches();
 }
-
 function hideLd(){document.getElementById('ld').style.display='none';}
-
-function pick(el){
-  const g=el.dataset.g, v=el.dataset.v;
-  picks[g]=v;
-  document.querySelectorAll(`.cb[data-g="${g}"]`).forEach(b=>b.classList.toggle('on',b===el));
-}
-
+function pick(el){const g=el.dataset.g,v=el.dataset.v;picks[g]=v;document.querySelectorAll(`.cb[data-g="${g}"]`).forEach(b=>b.classList.toggle('on',b===el));}
 function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
 function greet(){const h=new Date().getHours();return h<12?'morning':h<17?'afternoon':'evening';}
 function daysAgo(ts){if(!ts)return 1;const d=ts.seconds?new Date(ts.seconds*1000):new Date(ts);return Math.max(1,Math.floor((Date.now()-d.getTime())/86400000));}
 function fmtD(ts){if(!ts)return'';const d=ts.seconds?new Date(ts.seconds*1000):new Date(ts);return d.toLocaleDateString('en-US',{month:'short',day:'numeric'});}
 function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('on');setTimeout(()=>t.classList.remove('on'),2800);}
-
+function stepH(n,tot){let d='';for(let i=1;i<=tot;i++)d+=`<div class="sd${i===n?' on':''}"></div>`;return`<div class="step-ind">${d}</div>`;}
 function calcPay(members,pot,dropPct){
   const dropped=Math.round(members*(dropPct/100));
   const surv=Math.max(1,members-dropped);
   const net=Math.round(pot*.9);
-  // 1st=8%, 2nd=5%, 3rd=2%, everyone else=85%
-  // This ensures regular finishers get ~$85+ back even at only 10% dropout
-  const first=surv===1?net:surv===2?Math.round(net*.6):surv===3?Math.round(net*.5):Math.round(net*.08);
-  const second=surv<2?0:surv===2?net-first:surv===3?Math.round(net*.3):Math.round(net*.05);
-  const third=surv<3?0:surv===3?net-first-second:Math.round(net*.02);
+  const first=surv===1?net:surv===2?Math.round(net*.6):Math.round(net*.08);
+  const second=surv<2?0:surv===2?net-first:Math.round(net*.05);
+  const third=surv<3?0:Math.round(net*.02);
   const rest=surv>3?Math.round((net-first-second-third)/Math.max(1,surv-3)):0;
   return{dropped,surv,net,first,second,third,rest};
 }
@@ -385,7 +495,7 @@ function calcPay(members,pot,dropPct){
 function renderProf(){
   const name=(meData?.name||me?.email?.split('@')[0]||'User');
   const init=name.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2);
-  const dep=meData?.totalDeposited||0, ret=meData?.totalReturned||0, profit=ret-dep;
+  const dep=meData?.totalDeposited||0,ret=meData?.totalReturned||0,profit=ret-dep;
   const streak=meData?.streak||0;
   const col=profit>=0?'var(--gn)':'var(--rd)';
   const sign=profit>=0?'+':'-';
@@ -394,84 +504,61 @@ function renderProf(){
 
   let h=`<div style="display:flex;align-items:center;gap:14px;margin-bottom:18px;">
     <div class="av">${init}</div>
-    <div><p style="font-size:17px;font-weight:500;color:var(--wh);">${esc(name)}</p><p style="font-size:12px;color:var(--mt);">${me?.email} · Level ${meData?.level||1}</p></div>
+    <div><p style="font-size:17px;font-weight:600;color:var(--tx);">${esc(name)}</p><p style="font-size:12px;color:var(--mt);">Level ${meData?.level||1} · ${streak} day streak</p></div>
     <span class="pill gp" style="margin-left:auto;">${streak} 🔥</span>
   </div>
-
-  <div class="card ${profit>=0?'gn':''} tap" onclick="V.profOpen=!V.profOpen;renderProf()">
+  <div class="card${profit>=0?' gn':''} tap" onclick="V.profOpen=!V.profOpen;renderProf()">
     <div class="row" style="margin-bottom:10px;">
-      <div><span class="slbl" style="margin:0 0 4px;">total profit made</span>
-      <div class="pnum" style="color:${col};">${sign}$${Math.abs(profit)}</div></div>
+      <div><span class="slbl" style="margin:0 0 3px;">total profit made</span>
+      <p style="font-family:'Syne',sans-serif;font-weight:800;font-size:38px;color:${col};letter-spacing:-.02em;line-height:1;">${sign}$${Math.abs(profit)}</p></div>
       <span style="font-size:18px;color:var(--mt);">${V.profOpen?'▲':'▼'}</span>
     </div>
     <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;">
-      <div style="background:var(--bk);border-radius:9px;padding:8px;text-align:center;"><p style="font-size:9px;color:var(--mt);text-transform:uppercase;letter-spacing:.04em;">deposited</p><p style="font-size:14px;font-weight:500;color:var(--rd);">$${dep}</p></div>
-      <div style="background:var(--bk);border-radius:9px;padding:8px;text-align:center;"><p style="font-size:9px;color:var(--mt);text-transform:uppercase;letter-spacing:.04em;">returned</p><p style="font-size:14px;font-weight:500;color:var(--gn);">$${ret}</p></div>
-      <div style="background:var(--bk);border-radius:9px;padding:8px;text-align:center;"><p style="font-size:9px;color:var(--mt);text-transform:uppercase;letter-spacing:.04em;">net</p><p style="font-size:14px;font-weight:500;color:${col};">${sign}$${Math.abs(profit)}</p></div>
+      <div style="background:var(--s1);border-radius:9px;padding:8px;text-align:center;"><p style="font-size:9px;color:var(--mt);text-transform:uppercase;letter-spacing:.04em;">deposited</p><p style="font-size:14px;font-weight:600;color:var(--rd);">$${dep}</p></div>
+      <div style="background:var(--s1);border-radius:9px;padding:8px;text-align:center;"><p style="font-size:9px;color:var(--mt);text-transform:uppercase;letter-spacing:.04em;">returned</p><p style="font-size:14px;font-weight:600;color:var(--gn);">$${ret}</p></div>
+      <div style="background:var(--s1);border-radius:9px;padding:8px;text-align:center;"><p style="font-size:9px;color:var(--mt);text-transform:uppercase;letter-spacing:.04em;">net</p><p style="font-size:14px;font-weight:600;color:${col};">${sign}$${Math.abs(profit)}</p></div>
     </div>
-    ${V.profOpen?profChart(dep,ret,profit):''}
   </div>`;
 
   if(active){
     const d=daysAgo(active.createdAt),p=Math.min(100,Math.round((d/active.duration)*100));
-    h+=`<div class="card pu tap" onclick="openChal('${active.id}')">
-      <div class="row" style="margin-bottom:6px;"><p style="font-size:13px;font-weight:500;color:var(--wh);">Active challenge</p><span class="pill pp">Day ${d}</span></div>
-      <p style="font-size:14px;font-weight:500;color:var(--wh);margin-bottom:4px;">"${esc(active.goal.length>35?active.goal.slice(0,35)+'…':active.goal)}"</p>
-      <p style="font-size:11px;color:var(--mt);margin-bottom:7px;">${active.gt==='progress'?'🛡 Buy-in protected':'💰 Profit goal'} · $${active.dep}</p>
+    const g=GOALS.find(x=>x.id===active.gid)||GOALS[0];
+    h+=`<div class="card gn tap" onclick="openChal('${active.id}')">
+      <div class="row" style="margin-bottom:5px;"><p style="font-size:13px;font-weight:600;color:var(--tx);">${g.ic} Active challenge</p><span class="pill gp">Day ${d}</span></div>
+      <p style="font-size:12px;color:var(--mt2);margin-bottom:4px;">${esc(active.goal.length>36?active.goal.slice(0,36)+'…':active.goal)}</p>
+      <p style="font-size:11px;color:var(--mt);margin-bottom:7px;">🛡 Buy-in protected · $${active.dep}</p>
       <div class="pb-bg"><div class="pb" style="width:${p}%;"></div></div>
-      <div class="row" style="margin-top:5px;"><span style="font-size:11px;color:var(--mt);">${p}% done</span><span style="font-size:11px;color:var(--pu);">tap for progress →</span></div>
+      <div class="row" style="margin-top:4px;"><span style="font-size:11px;color:var(--mt);">${p}% done</span><span style="font-size:11px;color:var(--gn);">tap for progress →</span></div>
     </div>
-    <button class="btn btn-g" onclick="show('sess');document.getElementById('tabbar').classList.add('on');renderSessBanner();" style="margin-bottom:12px;">⏱ Log today's session</button>`;
+    <button class="btn-p" onclick="showVideo()" style="margin-bottom:12px;">+ log a workout</button>`;
   }
 
   h+=`<div class="card">
-    <p style="font-size:13px;font-weight:500;color:var(--wh);margin-bottom:10px;">This week</p>
-    <div style="display:flex;gap:5px;">${['M','T','W','T','F','S','S'].map((d,i)=>`<div class="wd ${i<3?'done':i===3?'today':''}">${d}</div>`).join('')}</div>
-  </div>`;
-
-  h+=`<div class="card">
-    <p style="font-size:13px;font-weight:500;color:var(--wh);margin-bottom:10px;">Leaderboard</p>`;
-
-  // Real leaderboard from Firebase
-  if(leaderboard.length>0){
-    const myRank=leaderboard.findIndex(u=>u.uid===me.uid)+1;
-    const top3=leaderboard.slice(0,3);
-    top3.forEach((u,i)=>{
-      const medals=['🥇','🥈','🥉'];
-      h+=`<div class="row" style="padding:6px 0;border-bottom:0.5px solid var(--bd);">
-        <span style="font-size:12px;color:var(--mt);">${medals[i]} ${esc(u.name||'User')}</span>
-        <span style="font-size:12px;color:var(--tx);">${u.streak||0} streak</span>
-      </div>`;
-    });
-    if(myRank>3){
-      h+=`<div class="row" style="padding:6px 0;background:var(--gd);border-radius:8px;padding:7px 8px;margin-top:4px;">
-        <span style="font-size:12px;color:var(--gn);">You — #${myRank}</span>
-        <span style="font-size:12px;color:var(--gn);">${streak} streak</span>
-      </div>`;
-    }
-  }else{
-    h+=`<p style="font-size:12px;color:var(--mt);">Sign in to see the leaderboard</p>`;
-  }
-
-  h+=`</div>
+    <p style="font-size:13px;font-weight:600;color:var(--tx);margin-bottom:10px;">This week</p>
+    <div style="display:flex;gap:5px;">${['M','T','W','T','F','S','S'].map((d,i)=>`<div style="width:25px;height:25px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;${i<3?'background:var(--gn);color:#fff;':i===3?'background:var(--gnl);color:var(--gnd);border:1px solid var(--gn);':'background:var(--s2);color:var(--mt);'}">${d}</div>`).join('')}</div>
+  </div>
   <div class="card">
-    <p style="font-size:13px;font-weight:500;color:var(--wh);margin-bottom:10px;">Stats</p>
-    <div class="sg">
-      <div class="sb"><div class="sl">Sessions</div><div class="sv">${mySessions.length}</div></div>
-      <div class="sb"><div class="sl">Hours logged</div><div class="sv">${Math.floor(totMin/60)}h</div></div>
-      <div class="sb"><div class="sl">Challenges</div><div class="sv">${myChallenges.length}</div></div>
-      <div class="sb"><div class="sl">Level</div><div class="sv pu">${meData?.level||1}</div></div>
-    </div>
+    <p style="font-size:13px;font-weight:600;color:var(--tx);margin-bottom:10px;">Leaderboard</p>`;
+
+  if(leaderboard.length>0){
+    const medals=['🥇','🥈','🥉'];
+    leaderboard.slice(0,3).forEach((u,i)=>{
+      h+=`<div class="row" style="padding:6px 0;border-bottom:0.5px solid var(--bd);"><span style="font-size:12px;color:var(--mt2);">${medals[i]} ${esc(u.name||'User')}</span><span style="font-size:12px;color:var(--tx);">${u.streak||0} streak</span></div>`;
+    });
+    const myRank=leaderboard.findIndex(u=>u.uid===me.uid)+1;
+    if(myRank>3) h+=`<div class="row" style="padding:7px 8px;background:var(--gnll);border-radius:8px;margin-top:5px;"><span style="font-size:12px;color:var(--gnd);">You — #${myRank}</span><span style="font-size:12px;color:var(--gn);">${streak} streak</span></div>`;
+  }else{
+    h+=`<p style="font-size:12px;color:var(--mt);">Be the first to join a challenge!</p>`;
+  }
+  h+=`</div>
+  <div class="sg">
+    <div class="sb"><div class="sl">Sessions</div><div class="sv">${mySessions.length}</div></div>
+    <div class="sb"><div class="sl">Hours</div><div class="sv">${Math.floor(totMin/60)}h</div></div>
+    <div class="sb"><div class="sl">Challenges</div><div class="sv">${myChallenges.length}</div></div>
+    <div class="sb"><div class="sl">Level</div><div class="sv gn">${meData?.level||1}</div></div>
   </div>`;
 
   document.getElementById('prof-body').innerHTML=h;
-}
-
-function profChart(dep,ret,profit){
-  const months=[{m:'Nov',p:-dep||0},{m:'Dec',p:Math.round((ret||0)*.3)},{m:'Jan',p:-10},{m:'Feb',p:45},{m:'Mar',p:28},{m:'Apr',p:93},{m:'May',p:profit}];
-  const maxA=Math.max(...months.map(d=>Math.abs(d.p)),1);
-  const bars=months.map(d=>{const h=Math.max(4,Math.round(Math.abs(d.p)/maxA*46));const c=d.p>=0?'var(--gn)':'var(--rd)';return`<div class="bar-col"><p style="font-size:8px;color:${c};margin-bottom:2px;">${d.p>=0?'+':''}${d.p}</p><div class="bar" style="height:${h}px;background:${c};opacity:.85;"></div><div class="blbl">${d.m}</div></div>`;}).join('');
-  return`<div style="margin-top:12px;"><div class="bar-wrap">${bars}</div></div>`;
 }
 
 // ============================================================
@@ -482,101 +569,104 @@ function renderChal(){
   const streak=meData?.streak||0;
   document.getElementById('streak-pill').textContent=streak+' streak'+(streak>0?' 🔥':'');
 
-  let h=`<p style="font-size:12px;color:var(--mt);margin-bottom:13px;">Tap your challenge for progress. Tap others to see earnings.</p>`;
+  let h=`<p style="font-size:12px;color:var(--mt);margin-bottom:13px;">Tap your challenge for progress. Tap others for earnings.</p>`;
 
   if(active.length){
     const c=active[0];const d=daysAgo(c.createdAt);const p=Math.min(100,Math.round((d/c.duration)*100));
+    const g=GOALS.find(x=>x.id===c.gid)||GOALS[0];
     h+=`<span class="slbl">currently in</span>
-    <div class="card pu tap" onclick="openChal('${c.id}')">
-      <div class="row"><p style="font-size:14px;font-weight:500;color:var(--wh);">${esc(c.goal.length>32?c.goal.slice(0,32)+'…':c.goal)}</p><span class="pill gp">joined</span></div>
-      <p style="font-size:11px;color:var(--mt);margin:4px 0 8px;">Day ${d} of ${c.duration} · ${c.gt} goal · $${c.dep}</p>
+    <div class="card gn tap" onclick="openChal('${c.id}')">
+      <div class="row"><p style="font-size:13px;font-weight:600;color:var(--tx);">${g.ic} ${esc(c.goal.length>30?c.goal.slice(0,30)+'…':c.goal)}</p><span class="pill gp">joined</span></div>
+      <p style="font-size:11px;color:var(--mt);margin:4px 0 8px;">Day ${d} of ${c.duration} · ${c.dep} deposit</p>
       <div class="pb-bg"><div class="pb" style="width:${p}%;"></div></div>
-      <div class="row" style="margin-top:5px;"><span style="font-size:11px;color:var(--mt);">${p}% done</span><span style="font-size:11px;color:var(--pu);">tap for progress →</span></div>
+      <div class="row" style="margin-top:4px;"><span style="font-size:11px;color:var(--mt);">${p}% done</span><span style="font-size:11px;color:var(--gn);">tap for progress →</span></div>
     </div>`;
   }
 
   h+=`<span class="slbl" style="margin-top:4px;">public challenges</span>`;
-
-  PUB_SEEDS.forEach(seed=>{
+  PUB.forEach(seed=>{
     const c=pubData[seed.id]||seed;
-    const pot=c.pot||seed.basePot;
-    const members=c.memberCount||seed.baseMembers;
-    const pay=calcPay(members,pot,35);
+    const g=GOALS.find(x=>x.id===seed.g)||GOALS[0];
+    const pot=c.pot||seed.pot;const members=c.members||seed.members;
+    const pay=calcPay(members,pot,seed.drop);
     h+=`<div class="card tap" onclick="openCalc('${seed.id}')">
-      <div class="row"><p style="font-size:14px;font-weight:500;color:var(--wh);">${seed.name}</p><span class="pill pp">infinite</span></div>
-      <p style="font-size:11px;color:var(--mt);margin:4px 0 8px;">${seed.desc}</p>
+      <div class="row"><p style="font-size:13px;font-weight:600;color:var(--tx);">${g.ic} ${seed.name}</p><span class="pill gp">verified</span></div>
+      <p style="font-size:11px;color:var(--mt);margin:4px 0 8px;">${g.verify}</p>
       <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-bottom:8px;">
-        <div><p class="slbl" style="margin:0 0 2px;">buy-in</p><p style="font-size:13px;color:var(--pu);">$${seed.buyin}</p></div>
-        <div><p class="slbl" style="margin:0 0 2px;">pot</p><p style="font-size:13px;color:var(--go);">$${pot.toLocaleString()}</p></div>
-        <div><p class="slbl" style="margin:0 0 2px;">members</p><p style="font-size:13px;color:var(--tx);">${members}</p></div>
+        <div><p class="slbl" style="margin:0 0 2px;">buy-in</p><p style="font-size:13px;color:var(--gn);font-weight:600;">$${seed.buyin}</p></div>
+        <div><p class="slbl" style="margin:0 0 2px;">pot</p><p style="font-size:13px;color:var(--go);font-weight:600;">$${pot.toLocaleString()}</p></div>
+        <div><p class="slbl" style="margin:0 0 2px;">members</p><p style="font-size:13px;color:var(--tx);font-weight:600;">${members}</p></div>
       </div>
       <div class="earn-box">
         <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;">
-          <div style="text-align:center;background:var(--od);border-radius:8px;padding:6px;"><p style="font-size:9px;color:var(--go);">1st</p><p style="font-size:13px;font-weight:500;color:var(--go);">$${pay.first}</p></div>
-          <div style="text-align:center;background:#1e1e2e;border-radius:8px;padding:6px;"><p style="font-size:9px;color:#aaa;">2nd</p><p style="font-size:13px;font-weight:500;color:#aaa;">$${pay.second}</p></div>
-          <div style="text-align:center;background:#2a1810;border-radius:8px;padding:6px;"><p style="font-size:9px;color:#c07030;">3rd</p><p style="font-size:13px;font-weight:500;color:#c07030;">$${pay.third}</p></div>
+          <div style="text-align:center;background:var(--gol);border-radius:8px;padding:6px;"><p style="font-size:9px;color:var(--go);">1st</p><p style="font-size:13px;font-weight:700;color:var(--go);">$${pay.first}</p></div>
+          <div style="text-align:center;background:#f5f5f5;border-radius:8px;padding:6px;"><p style="font-size:9px;color:#888;">2nd</p><p style="font-size:13px;font-weight:700;color:#888;">$${pay.second}</p></div>
+          <div style="text-align:center;background:#f9f0e8;border-radius:8px;padding:6px;"><p style="font-size:9px;color:#c07030;">3rd</p><p style="font-size:13px;font-weight:700;color:#c07030;">$${pay.third}</p></div>
         </div>
         <p style="font-size:10px;color:var(--mt);text-align:center;margin-top:6px;">everyone else: ~$${pay.rest} · tap to calculate</p>
       </div>
     </div>`;
   });
-
-  h+=`<button class="btn btn-p" onclick="show('new');document.getElementById('tabbar').classList.add('on');" style="margin-top:4px;">+ start a challenge</button>`;
+  h+=`<button class="btn-p" onclick="show('new');V.nStep=1;V.nGoal=null;V.nFreq=null;V.nDur=null;V.nDep=null;V.nQuit=null;document.getElementById('tabbar').classList.add('on');renderNew();" style="margin-top:4px;">+ join a challenge</button>`;
   document.getElementById('chal-body').innerHTML=h;
 }
 
-function openCalc(id){
-  V.calcId=id;V.drop=35;show('calc');document.getElementById('tabbar').classList.add('on');renderCalc();
-}
-
+// Earnings calculator
+function openCalc(id){V.calcId=id;V.drop=PUB.find(s=>s.id===id)?.drop||30;show('calc');document.getElementById('tabbar').classList.add('on');renderCalc();}
 function renderCalc(){
-  const seed=PUB_SEEDS.find(s=>s.id===V.calcId)||PUB_SEEDS[0];
+  const seed=PUB.find(s=>s.id===V.calcId)||PUB[0];
   const c=pubData[V.calcId]||seed;
-  const pot=c.pot||seed.basePot;const members=c.memberCount||seed.baseMembers;
+  const g=GOALS.find(x=>x.id===seed.g)||GOALS[0];
+  const pot=c.pot||seed.pot;const members=c.members||seed.members;
   const pay=calcPay(members,pot,V.drop);
   document.getElementById('calc-body').innerHTML=`
-  <p style="font-size:15px;font-weight:500;color:var(--wh);margin-bottom:4px;">${seed.name}</p>
-  <p style="font-size:12px;color:var(--mt);margin-bottom:13px;">Drag the slider to see how payouts change as people drop out.</p>
+  <p style="font-size:14px;font-weight:600;color:var(--tx);margin-bottom:4px;">${g.ic} ${seed.name}</p>
+  <p style="font-size:12px;color:var(--mt);margin-bottom:13px;">Drag the slider — see payouts update live.</p>
   <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px;margin-bottom:10px;">
-    <div style="background:var(--od);border-radius:12px;padding:11px;text-align:center;"><p style="font-size:10px;color:var(--go);">1st place</p><p style="font-size:20px;font-weight:500;color:var(--go);margin:4px 0 2px;">$${pay.first}</p><p style="font-size:9px;color:#855a20;">8% of pot</p></div>
-    <div style="background:#1e1e2e;border-radius:12px;padding:11px;text-align:center;"><p style="font-size:10px;color:#aaa;">2nd place</p><p style="font-size:20px;font-weight:500;color:#aaa;margin:4px 0 2px;">$${pay.second}</p><p style="font-size:9px;color:#666;">5%</p></div>
-    <div style="background:#2a1810;border-radius:12px;padding:11px;text-align:center;"><p style="font-size:10px;color:#c07030;">3rd place</p><p style="font-size:20px;font-weight:500;color:#c07030;margin:4px 0 2px;">$${pay.third}</p><p style="font-size:9px;color:#805020;">2%</p></div>
+    <div style="background:var(--gol);border-radius:12px;padding:11px;text-align:center;">
+      <p style="font-size:10px;color:var(--go);">1st · 8%</p>
+      <p style="font-size:20px;font-weight:700;color:var(--go);margin:4px 0 2px;">$${pay.first}</p>
+    </div>
+    <div style="background:#f5f5f5;border-radius:12px;padding:11px;text-align:center;">
+      <p style="font-size:10px;color:#888;">2nd · 5%</p>
+      <p style="font-size:20px;font-weight:700;color:#888;margin:4px 0 2px;">$${pay.second}</p>
+    </div>
+    <div style="background:#faf0e8;border-radius:12px;padding:11px;text-align:center;">
+      <p style="font-size:10px;color:#c07030;">3rd · 2%</p>
+      <p style="font-size:20px;font-weight:700;color:#c07030;margin:4px 0 2px;">$${pay.third}</p>
+    </div>
   </div>
   <div class="earn-box" style="text-align:center;padding:14px;">
-    <p style="font-size:11px;color:var(--pu);margin-bottom:4px;">everyone else who finishes</p>
-    <p style="font-size:26px;font-weight:500;color:var(--gn);">$${pay.rest}</p>
-    <p style="font-size:10px;color:var(--mt);margin-top:2px;">split among ${Math.max(0,pay.surv-3)} other survivors</p>
+    <p style="font-size:12px;color:var(--gnd);margin-bottom:4px;">everyone else who finishes</p>
+    <p style="font-size:26px;font-weight:700;color:var(--gn);">$${pay.rest}</p>
+    <p style="font-size:10px;color:var(--mt);margin-top:2px;">split among ${Math.max(0,pay.surv-3)} finishers</p>
   </div>
-  <div class="card" style="margin-top:4px;">
-    <p class="slbl" style="margin-bottom:7px;">% who drop out: <span style="color:var(--pu);">${Math.round(V.drop)}%</span></p>
+  <div class="card" style="margin-top:6px;">
+    <p class="slbl" style="margin-bottom:7px;">% who quit: <span style="color:var(--gn);font-weight:600;">${Math.round(V.drop)}%</span></p>
     <input type="range" min="0" max="80" step="1" value="${Math.round(V.drop)}" style="width:100%;margin-bottom:10px;" oninput="V.drop=parseInt(this.value);renderCalc()">
     <div class="sg" style="margin:0;">
-      <div class="sb"><div class="sl">drop out</div><div class="sv rd">${pay.dropped}</div></div>
-      <div class="sb"><div class="sl">survivors</div><div class="sv gn">${pay.surv}</div></div>
+      <div class="sb"><div class="sl">quit</div><div class="sv rd">${pay.dropped}</div></div>
+      <div class="sb"><div class="sl">finishers</div><div class="sv gn">${pay.surv}</div></div>
       <div class="sb"><div class="sl">total pot</div><div class="sv go">$${pot.toLocaleString()}</div></div>
       <div class="sb"><div class="sl">after 10% fee</div><div class="sv">$${pay.net.toLocaleString()}</div></div>
     </div>
   </div>
-  <button class="btn btn-p" onclick="joinPubChallenge('${seed.id}')">join for $${seed.buyin}</button>
-  <button class="btn btn-o" onclick="goTab('challenges')" style="margin-top:6px;">back</button>`;
+  <button class="btn-p" onclick="joinPub('${seed.id}')">join for $${seed.buyin}</button>
+  <button class="btn-s" onclick="goTab('challenges')">back to challenges</button>`;
 }
 
 // ============================================================
 // CHALLENGE DETAIL
 // ============================================================
-function openChal(id){
-  V.selChal=myChallenges.find(c=>c.id===id);
-  if(!V.selChal)return;
-  V.ct=0;show('cdet');document.getElementById('tabbar').classList.add('on');renderCdet();
-}
-
+function openChal(id){V.selChal=myChallenges.find(c=>c.id===id);if(!V.selChal)return;V.ct=0;show('cdet');document.getElementById('tabbar').classList.add('on');renderCdet();}
 function renderCdet(){
   const c=V.selChal;if(!c)return;
+  const g=GOALS.find(x=>x.id===c.gid)||GOALS[0];
   const d=daysAgo(c.createdAt),p=Math.min(100,Math.round((d/c.duration)*100));
   const sc=mySessions.filter(s=>s.cid===c.id&&s.done).length;
   const tm=mySessions.filter(s=>s.cid===c.id).reduce((a,b)=>a+(b.mins||0),0);
 
-  let h=`<p style="font-size:15px;font-weight:500;color:var(--wh);margin-bottom:3px;">"${esc(c.goal)}"</p>
+  let h=`<p style="font-size:15px;font-weight:600;color:var(--tx);margin-bottom:3px;">${g.ic} ${esc(c.goal)}</p>
   <p style="font-size:11px;color:var(--mt);margin-bottom:12px;">Day ${d} of ${c.duration} · $${c.dep} deposit</p>
   <div class="seg">
     <div class="seg-b${V.ct===0?' on':''}" onclick="V.ct=0;renderCdet()">my progress</div>
@@ -585,115 +675,81 @@ function renderCdet(){
   </div>`;
 
   if(V.ct===0){
-    const tlist=[{k:'t1',t:'Complete today\'s session',s:'lock phone, no distractions',i:'🔒'},{k:'t2',t:'Hit 8 hours this week',s:mySessions.filter(s=>s.cid===c.id&&s.done).slice(-7).reduce((a,b)=>a+(b.mins||0),0)+'m logged this week',i:'⏱'},{k:'t3',t:'Submit week update',s:'60-sec milestone check-in',i:'📹'},{k:'t4',t:'Keep integrations active',s:'GitHub + Stripe connected',i:'🔌'}];
+    const tlist=[
+      {k:'t1',t:`Complete ${c.nFreq||'4'} workouts this week`,s:`${g.verify}`,ic:'🏋️'},
+      {k:'t2',t:'Submit workout verification',s:'short video · AI verified',ic:'📹'},
+      {k:'t3',t:'Weekly check-in note',s:'what did you work on?',ic:'📝'},
+      {k:'t4',t:`${c.gid==='active'?'Hit daily step target':'Keep Apple Health connected'}`,s:'auto-tracking active',ic:'❤️'}
+    ];
     const done=Object.values(tasks).filter(Boolean).length,tot=tlist.length,pct=Math.round(done/tot*100);
-    h+=`<div class="card" style="background:var(--pd);border-color:rgba(167,139,250,.3);">
-      <div class="row" style="margin-bottom:6px;"><p style="font-size:12px;color:var(--pu);font-weight:500;">${done} of ${tot} tasks done</p><span class="pill ${pct===100?'gp':'pp'}">${pct===100?'all done':pct+'%'}</span></div>
+    h+=`<div class="card gn">
+      <div class="row" style="margin-bottom:5px;"><p style="font-size:12px;color:var(--gnd);font-weight:500;">${done} of ${tot} done this week</p><span class="pill ${pct===100?'gp':'mp'}">${pct===100?'all done':pct+'%'}</span></div>
       <div class="pb-bg"><div class="pb" style="width:${pct}%;"></div></div>
     </div>
     <div class="card">
-      <p style="font-size:12px;font-weight:500;color:var(--tx);margin-bottom:7px;">This week — tap to check off</p>
+      <p style="font-size:12px;font-weight:600;color:var(--tx);margin-bottom:7px;">This week — tap to check off</p>
       ${tlist.map(t=>{const on=tasks[t.k];return`<div class="trow" onclick="tasks['${t.k}']=!tasks['${t.k}'];renderCdet()">
         <div class="chk ${on?'chk-on':'chk-off'}">${on?'<span style="font-size:11px;color:var(--gn);">✓</span>':''}</div>
-        <div style="flex:1;"><p style="font-size:13px;color:${on?'var(--mt)':'var(--wh)'};text-decoration:${on?'line-through':'none'};">${t.t}</p><p style="font-size:10px;color:#444;">${t.s}</p></div>
-        <span style="font-size:16px;">${t.i}</span>
+        <div style="flex:1;"><p style="font-size:13px;color:${on?'var(--mt)':'var(--tx)'};text-decoration:${on?'line-through':'none'};">${t.t}</p><p style="font-size:10px;color:#ccc;">${t.s}</p></div>
+        <span style="font-size:16px;">${t.ic}</span>
       </div>`;}).join('')}
     </div>
-    <div class="note gn"><b>🛡 Buy-in protected</b> — Complete tasks each week and your $${c.dep} is safe no matter what.</div>`;
-
+    <div class="note"><b>Buy-in protected</b> — complete tasks each week and your $${c.dep} comes back no matter what.</div>`;
     if(c.status==='active'){
-      h+=`<button class="btn btn-g" onclick="show('sess');document.getElementById('tabbar').classList.add('on');renderSessBanner()">⏱ Log a session</button>
-      <button class="btn btn-p" onclick="doneChal('${c.id}')">✅ Mark as completed</button>
-      <button class="btn btn-r" onclick="quitChal('${c.id}')">Quit challenge</button>
-      <div class="note go" style="margin-top:11px;"><b>Completing:</b> Your $${c.dep} is refunded (minus 10% fee) within 5 business days.<br><br><b>Quitting:</b> Your $${c.dep} is donated to ${c.ch||'charity'}.</div>`;
+      h+=`<button class="btn-p" onclick="showVideo()">+ log a workout</button>
+      <button class="btn-s" onclick="doneChal('${c.id}')">mark as completed</button>
+      <button class="btn-d" onclick="quitChal('${c.id}')">quit challenge</button>`;
     }
   }else if(V.ct===1){
-    const pubId=c.pubId;const pub=pubId?pubData[pubId]:null;
-    const pot=pub?pub.pot:48200;const members=pub?pub.memberCount:482;
-    const pay=calcPay(members,pot,35);
+    const pub=PUB.find(s=>s.id===c.pubId);
+    const pot=pub?pubData[pub.id]?.pot||pub.pot:24500;
+    const members=pub?pubData[pub.id]?.members||pub.members:245;
+    const pay=calcPay(members,pot,30);
+    const qLabel=c.quitTo==='pot'?'goes into the pot':'donated to '+(c.quitTo||'charity');
     h+=`<div class="card" style="text-align:center;padding:18px;">
       <span class="slbl">current pot</span>
-      <p style="font-size:32px;font-weight:500;color:var(--go);margin:4px 0 2px;">$${pot.toLocaleString()}</p>
-      <p style="font-size:11px;color:var(--mt);margin-bottom:10px;">grows as more people join or drop</p>
+      <p style="font-size:32px;font-weight:700;color:var(--go);margin:4px 0 2px;">$${pot.toLocaleString()}</p>
+      <p style="font-size:11px;color:var(--mt);margin-bottom:10px;">grows every time someone quits</p>
       <div class="dv"></div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;text-align:left;">
-        <div><p class="slbl" style="margin:0 0 2px;">members</p><p style="font-size:14px;font-weight:500;color:var(--gn);">${members}</p></div>
-        <div><p class="slbl" style="margin:0 0 2px;">your deposit</p><p style="font-size:14px;font-weight:500;color:var(--tx);">$${c.dep}</p></div>
-        <div><p class="slbl" style="margin:0 0 2px;">1st place wins</p><p style="font-size:14px;font-weight:500;color:var(--go);">$${pay.first}</p></div>
-        <div><p class="slbl" style="margin:0 0 2px;">everyone else</p><p style="font-size:14px;font-weight:500;color:var(--gn);">~$${pay.rest}</p></div>
+        <div><p class="slbl" style="margin:0 0 2px;">still in</p><p style="font-size:14px;font-weight:600;color:var(--gn);">${pay.surv}</p></div>
+        <div><p class="slbl" style="margin:0 0 2px;">quit</p><p style="font-size:14px;font-weight:600;color:var(--rd);">${pay.dropped}</p></div>
+        <div><p class="slbl" style="margin:0 0 2px;">your deposit</p><p style="font-size:14px;font-weight:600;">$${c.dep}</p></div>
+        <div><p class="slbl" style="margin:0 0 2px;">if you quit</p><p style="font-size:12px;color:var(--go);">${qLabel}</p></div>
       </div>
     </div>
     <div class="card">
-      <p style="font-size:12px;font-weight:500;color:var(--tx);margin-bottom:8px;">Podium payouts</p>
-      <div class="podrow"><span style="font-size:13px;width:22px;color:var(--go);">1</span><div style="flex:1;"><p style="font-size:12px;color:var(--tx);">1st place · 8% of pot</p></div><span style="font-size:13px;font-weight:500;color:var(--go);">$${pay.first}</span></div>
-      <div class="podrow"><span style="font-size:13px;width:22px;color:#aaa;">2</span><div style="flex:1;"><p style="font-size:12px;color:var(--tx);">2nd place · 5%</p></div><span style="font-size:13px;font-weight:500;color:#aaa;">$${pay.second}</span></div>
-      <div class="podrow"><span style="font-size:13px;width:22px;color:#c07030;">3</span><div style="flex:1;"><p style="font-size:12px;color:var(--tx);">3rd place · 2%</p></div><span style="font-size:13px;font-weight:500;color:#c07030;">$${pay.third}</span></div>
-      <div class="podrow"><span style="font-size:12px;width:22px;color:var(--mt);">4+</span><div style="flex:1;"><p style="font-size:12px;color:var(--tx);">everyone else · split 85%</p></div><span style="font-size:13px;font-weight:500;color:var(--gn);">~$${pay.rest}</span></div>
-    </div>
-    ${c.gt==='progress'?'<div class="note gn"><b>🛡 Progress goal:</b> Your $'+c.dep+' is safe as long as you complete your weekly tasks.</div>':''}`;
+      <p style="font-size:12px;font-weight:600;color:var(--tx);margin-bottom:8px;">Podium payouts</p>
+      <div class="podrow"><span style="font-size:13px;width:22px;color:var(--go);font-weight:700;">1</span><div style="flex:1;"><p style="font-size:12px;color:var(--tx);">1st · 8% of pot</p></div><span style="font-size:13px;font-weight:600;color:var(--go);">$${pay.first}</span></div>
+      <div class="podrow"><span style="font-size:13px;width:22px;color:#888;font-weight:700;">2</span><div style="flex:1;"><p style="font-size:12px;color:var(--tx);">2nd · 5%</p></div><span style="font-size:13px;font-weight:600;color:#888;">$${pay.second}</span></div>
+      <div class="podrow"><span style="font-size:13px;width:22px;color:#c07030;font-weight:700;">3</span><div style="flex:1;"><p style="font-size:12px;color:var(--tx);">3rd · 2%</p></div><span style="font-size:13px;font-weight:600;color:#c07030;">$${pay.third}</span></div>
+      <div class="podrow"><span style="font-size:11px;width:22px;color:var(--mt);">4+</span><div style="flex:1;"><p style="font-size:12px;color:var(--tx);">everyone else · 85%</p></div><span style="font-size:13px;font-weight:600;color:var(--gn);">~$${pay.rest}</span></div>
+    </div>`;
   }else{
-    // Real leaderboard
-    let board=leaderboard.slice(0,10);
-    const rc={0:'var(--go)',1:'#aaa',2:'#c07030'};
     h+=`<p style="font-size:11px;color:var(--mt);margin-bottom:8px;">${leaderboard.length} users · ranked by streak</p>
     <div class="card" style="padding:10px 13px;">`;
-    if(board.length===0){h+=`<div class="empty"><div class="ei">🏆</div><div class="et">No users yet</div></div>`;}
+    if(!leaderboard.length){h+=`<div style="text-align:center;padding:24px;color:var(--mt);">No users yet — be first!</div>`;}
     else{
-      board.forEach((u,i)=>{
+      const rc={0:'var(--go)',1:'#888',2:'#c07030'};
+      leaderboard.slice(0,10).forEach((u,i)=>{
         const isMe=u.uid===me.uid;
-        h+=`<div class="li" style="${isMe?'background:var(--gd);border-radius:8px;padding:7px 5px;':''}">
-          <span style="font-size:12px;font-weight:500;width:20px;text-align:center;color:${rc[i]||(isMe?'var(--gn)':'var(--mt)')};">${i+1}</span>
-          <div style="width:26px;height:26px;border-radius:50%;background:var(--pd);display:flex;align-items:center;justify-content:center;font-size:9px;color:var(--pu);flex-shrink:0;">${(u.name||'U')[0]}</div>
-          <div style="flex:1;"><p style="font-size:12px;color:${isMe?'var(--gn)':'var(--tx)'};">${isMe?'you':esc(u.name||'User')}</p></div>
+        h+=`<div class="li" style="${isMe?'background:var(--gnll);border-radius:8px;padding:7px 5px;':''}">
+          <span style="font-size:12px;font-weight:600;width:20px;text-align:center;color:${rc[i]||(isMe?'var(--gn)':'var(--mt)')};">${i+1}</span>
+          <div style="width:26px;height:26px;border-radius:50%;background:var(--gnl);display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--gnd);flex-shrink:0;">${(u.name||'U')[0].toUpperCase()}</div>
+          <div style="flex:1;"><p style="font-size:12px;color:${isMe?'var(--gnd)':'var(--tx)'};">${isMe?'you':esc(u.name||'User')}</p></div>
           <span style="font-size:12px;color:${rc[i]||(isMe?'var(--gn)':'#888')};">${u.streak||0} streak</span>
         </div>`;
       });
     }
     h+=`</div>`;
   }
-
   document.getElementById('cdet-body').innerHTML=h;
-}
-
-async function joinPubChallenge(pubId){
-  const seed=PUB_SEEDS.find(s=>s.id===pubId);if(!seed)return;
-  const already=myChallenges.find(c=>c.pubId===pubId&&c.status==='active');
-  if(already){toast('You already joined this challenge!');goTab('challenges');return;}
-
-  const ref=await db.collection('userChallenges').add({
-    uid:me.uid,email:me.email,pubId,
-    goal:`${seed.name} challenge`,duration:seed.duration,
-    gt:'progress',dep:seed.buyin,ch:'Trees for the Future',
-    status:'active',createdAt:FV.serverTimestamp()
-  });
-
-  // Grow the public pot
-  try{
-    await db.collection('publicChallenges').doc(pubId).update({
-      pot:FV.increment(seed.buyin),
-      memberCount:FV.increment(1)
-    });
-    if(pubData[pubId]){pubData[pubId].pot+=seed.buyin;pubData[pubId].memberCount+=1;}
-  }catch(e){}
-
-  // Update user total deposited
-  await db.collection('users').doc(me.uid).update({totalDeposited:FV.increment(seed.buyin)});
-  if(meData)meData.totalDeposited=(meData.totalDeposited||0)+seed.buyin;
-
-  myChallenges.unshift({id:ref.id,uid:me.uid,pubId,goal:`${seed.name} challenge`,duration:seed.duration,gt:'progress',dep:seed.buyin,ch:'Trees for the Future',status:'active',createdAt:{seconds:Date.now()/1000}});
-
-  const link=STRIPE[String(seed.buyin)];
-  if(link&&!link.includes('YOUR_')){window.open(link+'?client_reference_id='+ref.id,'_blank');}
-  else{toast('⚠️ Add Stripe links to accept payments — see code comments');}
-
-  toast('Joined! Pay your $'+seed.buyin+' deposit to activate.');
-  setTimeout(()=>goTab('challenges'),2000);
 }
 
 async function doneChal(id){
   const c=myChallenges.find(x=>x.id===id);
-  if(!confirm('Mark as completed? Deposit refunded (minus 10% fee) within 5 business days.'))return;
-  await db.collection('userChallenges').doc(id).update({status:'completed'});
+  if(!confirm('Mark as completed? Deposit refunded minus 10% fee within 5 business days.'))return;
+  await db.collection('challenges').doc(id).update({status:'completed'});
   const refund=Math.round((c?.dep||0)*.9);
   await db.collection('users').doc(me.uid).update({totalReturned:FV.increment(refund)});
   if(meData)meData.totalReturned=(meData.totalReturned||0)+refund;
@@ -703,77 +759,246 @@ async function doneChal(id){
 
 async function quitChal(id){
   const c=myChallenges.find(x=>x.id===id);
-  if(!confirm(`Quit? Your $${c?.dep} donated to ${c?.ch||'charity'}.`))return;
-  await db.collection('userChallenges').doc(id).update({status:'failed'});
+  if(!confirm(`Quit? Your $${c?.dep} ${c?.quitTo==='pot'?'goes into the pot':'is donated to '+(c?.quitTo||'charity')}.`))return;
+  await db.collection('challenges').doc(id).update({status:'failed'});
   myChallenges=myChallenges.map(x=>x.id===id?{...x,status:'failed'}:x);
-  toast('Challenge ended. Deposit donated.');goTab('challenges');
+  toast('Challenge ended.');goTab('challenges');
+}
+
+async function joinPub(pubId){
+  const seed=PUB.find(s=>s.id===pubId);if(!seed)return;
+  if(myChallenges.find(c=>c.pubId===pubId&&c.status==='active')){toast('You already joined this challenge!');goTab('challenges');return;}
+  show('new');V.nStep=1;V.nGoal=seed.g;V.nFreq=null;V.nDur=null;V.nDep=String(seed.buyin);V.nQuit=null;
+  document.getElementById('tabbar').classList.add('on');
+  renderNew();
 }
 
 // ============================================================
-// NEW CHALLENGE (custom)
+// VIDEO VERIFICATION
 // ============================================================
-async function startChallenge(){
-  const goal=document.getElementById('nc-goal')?.value.trim();
-  if(!goal){toast('Describe your goal');return;}
-  if(!picks.dur){toast('Choose a duration');return;}
-  if(!picks.gt){toast('Choose a goal type');return;}
-  if(!picks.dep){toast('Choose a deposit amount');return;}
-  if(!picks.ch){toast('Choose a charity');return;}
+function showVideo(){V.vStep=0;show('video');document.getElementById('tabbar').classList.add('on');renderVideo();}
+function renderVideo(){
+  const s=V.vStep;
+  let h='';
+  if(s===0){
+    h=`<p style="font-size:15px;font-weight:600;color:var(--tx);margin-bottom:4px;">Log a workout</p>
+    <p style="font-size:11px;color:var(--mt);margin-bottom:14px;">Pot challenge is active · video required</p>
+    <div class="card go">
+      <div style="display:flex;align-items:center;gap:9px;">
+        <span style="font-size:20px;">💰</span>
+        <div><p style="font-size:12px;font-weight:600;color:var(--go);">Pot challenge active</p><p style="font-size:11px;color:var(--mt);">A short video is required to verify this session</p></div>
+      </div>
+    </div>
+    <div class="card">
+      <p class="slbl" style="margin-bottom:7px;">Workout type</p>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;">
+        ${['🏃 Running','🏋️ Weights','🚴 Cycling','🧘 Yoga','🏊 Swimming','⚽ Sport'].map((w,i)=>`<div style="background:${i===1?'var(--gnll)':'var(--s2)'};border:0.5px solid ${i===1?'var(--gn)':'var(--bd)'};border-radius:9px;padding:8px;text-align:center;font-size:12px;color:${i===1?'var(--gnd)':'var(--mt)'};cursor:pointer;">${w}</div>`).join('')}
+      </div>
+    </div>
+    <div class="card">
+      <p class="slbl" style="margin-bottom:7px;">Duration</p>
+      <div class="cr">${['20m','30m','45m','60m+'].map((d,i)=>`<div class="cb${i===2?' on':''}">${d}</div>`).join('')}</div>
+    </div>
+    <button class="btn-p" onclick="V.vStep=1;renderVideo()">record verification video</button>
+    <button class="btn-c" onclick="goTab('challenges')">cancel</button>`;
+  }else if(s===1){
+    h=`<p style="font-size:14px;font-weight:600;color:var(--tx);margin-bottom:4px;text-align:center;">Record your workout</p>
+    <p style="font-size:11px;color:var(--mt);margin-bottom:12px;text-align:center;">Show yourself exercising · 10–30 seconds</p>
+    <div class="cam-box" style="height:170px;">
+      <div style="position:absolute;top:10px;left:10px;"><span class="pill rp" style="font-size:9px;">● REC 0:14</span></div>
+      <div style="position:absolute;top:10px;right:10px;background:rgba(90,158,26,.2);border:1px solid var(--gn);border-radius:8px;padding:3px 8px;"><p style="font-size:9px;color:var(--gn);">face detected ✓</p></div>
+      <span style="font-size:36px;">🏋️</span>
+      <p style="font-size:10px;color:#555;margin-top:8px;">keep your face visible</p>
+    </div>
+    <div class="card" style="padding:10px 13px;margin-bottom:8px;">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:5px;"><div style="width:7px;height:7px;border-radius:50%;background:var(--gn);"></div><p style="font-size:11px;color:var(--gnd);">Face match — identity confirmed</p></div>
+      <div style="display:flex;align-items:center;gap:8px;"><div style="width:7px;height:7px;border-radius:50%;background:var(--go);"></div><p style="font-size:11px;color:var(--mt);">Movement — keep exercising...</p></div>
+    </div>
+    <button class="btn-p" onclick="V.vStep=2;renderVideo()">submit video</button>
+    <button class="btn-s" onclick="V.vStep=0;renderVideo()">retake</button>`;
+  }else if(s===2){
+    h=`<div style="text-align:center;padding:12px 0;">
+      <div style="width:52px;height:52px;border-radius:50%;background:var(--gnl);display:flex;align-items:center;justify-content:center;margin:0 auto 10px;font-size:24px;">🧠</div>
+      <p style="font-size:14px;font-weight:700;color:var(--tx);margin-bottom:4px;">AI is analysing...</p>
+      <p style="font-size:11px;color:var(--mt);margin-bottom:16px;">Usually takes 3–5 seconds</p>
+    </div>
+    <div class="card">
+      <div class="ai-row"><div class="ai-ic ai-ok">✓</div><div style="flex:1;"><p style="font-size:12px;font-weight:500;color:var(--tx);">Face match</p><p style="font-size:10px;color:var(--mt);">matches registered identity</p></div><span class="pill gp">pass</span></div>
+      <div class="ai-row"><div class="ai-ic ai-ok">✓</div><div style="flex:1;"><p style="font-size:12px;font-weight:500;color:var(--tx);">Real movement detected</p><p style="font-size:10px;color:var(--mt);">genuine physical activity</p></div><span class="pill gp">pass</span></div>
+      <div class="ai-row"><div class="ai-ic ai-wait">⏳</div><div style="flex:1;"><p style="font-size:12px;color:var(--mt);">Unique video</p><p style="font-size:10px;color:var(--mt);">checking not previously submitted...</p></div><span class="pill mp">checking</span></div>
+      <div class="ai-row"><div class="ai-ic ai-wait">⏳</div><div style="flex:1;"><p style="font-size:12px;color:var(--mt);">Activity match</p><p style="font-size:10px;color:var(--mt);">confirming exercise type...</p></div><span class="pill mp">checking</span></div>
+    </div>
+    <button class="btn-p" onclick="V.vStep=3;renderVideo()">see result</button>`;
+  }else if(s===3){
+    h=`<div style="text-align:center;padding:14px 0 10px;">
+      <div style="width:52px;height:52px;border-radius:50%;background:var(--gnl);display:flex;align-items:center;justify-content:center;margin:0 auto 10px;font-size:26px;">✅</div>
+      <p style="font-size:15px;font-weight:700;color:var(--tx);margin-bottom:4px;">Workout verified!</p>
+      <p style="font-size:11px;color:var(--mt);">Your session counts toward the pot.</p>
+    </div>
+    <div class="card gn">
+      <div class="ai-row"><div class="ai-ic ai-ok">✓</div><div style="flex:1;"><p style="font-size:12px;font-weight:500;color:var(--tx);">Face match</p></div><span class="pill gp">pass</span></div>
+      <div class="ai-row"><div class="ai-ic ai-ok">✓</div><div style="flex:1;"><p style="font-size:12px;font-weight:500;color:var(--tx);">Real movement detected</p></div><span class="pill gp">pass</span></div>
+      <div class="ai-row"><div class="ai-ic ai-ok">✓</div><div style="flex:1;"><p style="font-size:12px;font-weight:500;color:var(--tx);">Unique video</p></div><span class="pill gp">pass</span></div>
+      <div class="ai-row"><div class="ai-ic ai-ok">✓</div><div style="flex:1;"><p style="font-size:12px;font-weight:500;color:var(--tx);">Activity confirmed</p></div><span class="pill gp">pass</span></div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;">
+      <div class="sb"><div class="sl">week progress</div><div class="sv gn">4 of 5</div></div>
+      <div class="sb"><div class="sl">deposit</div><div class="sv go">$50 locked</div></div>
+    </div>
+    <button class="btn-p" onclick="goTab('challenges')">done</button>
+    <button class="btn-s" onclick="V.vStep=4;renderVideo()">see a failed check</button>`;
+  }else{
+    h=`<div style="text-align:center;padding:14px 0 10px;">
+      <div style="width:52px;height:52px;border-radius:50%;background:var(--rdl);display:flex;align-items:center;justify-content:center;margin:0 auto 10px;font-size:26px;">❌</div>
+      <p style="font-size:15px;font-weight:700;color:var(--tx);margin-bottom:4px;">Verification failed</p>
+      <p style="font-size:11px;color:var(--mt);">This workout does not count.</p>
+    </div>
+    <div class="card rd">
+      <div class="ai-row"><div class="ai-ic ai-ok">✓</div><div style="flex:1;"><p style="font-size:12px;font-weight:500;color:var(--tx);">Face match</p></div><span class="pill gp">pass</span></div>
+      <div class="ai-row"><div class="ai-ic ai-bad">✗</div><div style="flex:1;"><p style="font-size:12px;font-weight:500;color:var(--rd);">Real movement</p><p style="font-size:10px;color:var(--mt);">no physical activity detected</p></div><span class="pill rp">fail</span></div>
+      <div class="ai-row"><div class="ai-ic ai-bad">✗</div><div style="flex:1;"><p style="font-size:12px;font-weight:500;color:var(--rd);">Activity match</p><p style="font-size:10px;color:var(--mt);">sitting still is not a workout</p></div><span class="pill rp">fail</span></div>
+    </div>
+    <div class="note rd"><b>Why it failed:</b> No physical movement was detected. Make sure your full body is visible and you are actively exercising throughout the recording.</div>
+    <button class="btn-p" onclick="V.vStep=1;renderVideo()">retake video</button>
+    <button class="btn-s" onclick="goTab('challenges')">back</button>`;
+  }
+  document.getElementById('video-body').innerHTML=h;
+}
 
-  const ref=await db.collection('userChallenges').add({
-    uid:me.uid,email:me.email,goal,
-    duration:parseInt(picks.dur),gt:picks.gt,
-    dep:parseInt(picks.dep),ch:picks.ch,
+// ============================================================
+// NEW CHALLENGE FLOW
+// ============================================================
+function renderNew(){
+  const s=V.nStep;
+  if(s===1) return document.getElementById('new-body').innerHTML=rNs1();
+  if(s===2) return document.getElementById('new-body').innerHTML=rNs2();
+  if(s===3) return document.getElementById('new-body').innerHTML=rNs3();
+  document.getElementById('new-body').innerHTML=rNsDone();
+}
+
+function rNs1(){
+  let h=stepH(1,3)+
+    `<p style="font-size:14px;font-weight:700;color:var(--tx);margin-bottom:3px;">What's your goal?</p>
+    <p style="font-size:11px;color:var(--mt);margin-bottom:12px;">Your challenge is built around this.</p>`;
+  GOALS.forEach(g=>{
+    const sel=V.nGoal===g.id;
+    h+=`<div class="goal-opt${sel?' on':''}" onclick="V.nGoal='${g.id}';renderNew()">
+      <div style="width:36px;height:36px;border-radius:10px;background:${g.ibg};display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;">${g.ic}</div>
+      <div style="flex:1;"><p style="font-size:13px;font-weight:600;color:var(--tx);">${g.name}</p><p style="font-size:11px;color:var(--mt);">${g.sub}</p></div>
+      <div class="chk-circle${sel?' on':''}">
+        ${sel?'<span style="color:#fff;font-size:11px;">✓</span>':''}
+      </div>
+    </div>`;
+    if(sel){
+      h+=`<div class="note" style="margin-bottom:8px;">🛡 <b>Verified by:</b> ${g.verify}</div>`;
+    }
+  });
+  h+=`<button class="btn-p" ${V.nGoal?`onclick="V.nStep=2;renderNew()"`:''} style="opacity:${V.nGoal?1:.5}">${V.nGoal?'next →':'select a goal to continue'}</button>`;
+  return h;
+}
+
+function rNs2(){
+  const g=GOALS.find(x=>x.id===V.nGoal)||GOALS[0];
+  return stepH(2,3)+
+  `<div style="display:flex;align-items:center;gap:10px;margin-bottom:13px;">
+    <div style="width:34px;height:34px;border-radius:10px;background:${g.ibg};display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0;">${g.ic}</div>
+    <p style="font-size:14px;font-weight:600;color:var(--tx);">${g.name}</p>
+  </div>
+  <div class="card">
+    <p class="slbl" style="margin-bottom:7px;">${g.fl}</p>
+    <div class="cr">${g.freqs.map(f=>`<div class="cb${V.nFreq===f?' on':''}" onclick="V.nFreq='${f}';renderNew()">${f}</div>`).join('')}</div>
+  </div>
+  <div class="card">
+    <p class="slbl" style="margin-bottom:7px;">Duration</p>
+    <div class="cr">${['14 days','30 days','60 days','90 days'].map(d=>`<div class="cb${V.nDur===d?' on':''}" onclick="V.nDur='${d}';renderNew()">${d}</div>`).join('')}</div>
+  </div>
+  <div class="card">
+    <p class="slbl" style="margin-bottom:7px;">Deposit amount</p>
+    <div class="cr">${['$25','$50','$100'].map(d=>`<div class="cb${V.nDep===d?' on':''}" onclick="V.nDep='${d}';renderNew()">${d}</div>`).join('')}</div>
+    <p style="font-size:10px;color:var(--mt);margin-top:7px;">Returned when you finish · see next step for what happens if you quit</p>
+  </div>
+  <button class="btn-p" ${V.nFreq&&V.nDur&&V.nDep?`onclick="V.nStep=3;renderNew()"`:''} style="opacity:${V.nFreq&&V.nDur&&V.nDep?1:.5}">${V.nFreq&&V.nDur&&V.nDep?'next →':'fill in all options'}</button>
+  <button class="btn-c" onclick="V.nStep=1;renderNew()">back</button>`;
+}
+
+function rNs3(){
+  const g=GOALS.find(x=>x.id===V.nGoal)||GOALS[0];
+  const dep=parseInt((V.nDep||'$50').replace('$',''));
+  let h=stepH(3,3)+
+  `<p style="font-size:14px;font-weight:700;color:var(--tx);margin-bottom:3px;">If you quit early...</p>
+  <p style="font-size:11px;color:var(--mt);margin-bottom:12px;">Where does your deposit go?</p>`;
+
+  if(g.hasPot){
+    h+=`<div class="quit-opt${V.nQuit==='pot'?' on':''}" onclick="V.nQuit='pot';renderNew()">
+      <div style="width:36px;height:36px;border-radius:10px;background:var(--gol);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;">💰</div>
+      <div style="flex:1;"><p style="font-size:13px;font-weight:600;color:var(--tx);">Goes into the pot</p><p style="font-size:11px;color:var(--mt);">Finishers win more. Bigger pot = bigger payouts.</p></div>
+      <div class="chk-circle${V.nQuit==='pot'?' on':''}">
+        ${V.nQuit==='pot'?'<span style="color:#fff;font-size:11px;">✓</span>':''}
+      </div>
+    </div>`;
+    if(V.nQuit==='pot'){
+      h+=`<div class="note go" style="margin-bottom:8px;"><b>Pot option:</b> Your $${dep} goes directly to finishers. Every person who quits makes the pot bigger for everyone who stays.</div>`;
+    }
+  }
+
+  const charities=[
+    {id:'trees',ic:'🌱',bg:'#f0f9e8',name:'Trees for the Future',sub:'Plant trees with every miss'},
+    {id:'stjude',ic:'🏥',bg:'#fff0f0',name:"St. Jude's Children's Hospital",sub:'Support kids fighting cancer'},
+    {id:'redcross',ic:'❤️',bg:'#fff0f0',name:'American Red Cross',sub:'Disaster relief and blood supply'},
+  ];
+  charities.forEach(c=>{
+    h+=`<div class="quit-opt${V.nQuit===c.id?' on':''}" onclick="V.nQuit='${c.id}';renderNew()">
+      <div style="width:36px;height:36px;border-radius:10px;background:${c.bg};display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;">${c.ic}</div>
+      <div style="flex:1;"><p style="font-size:13px;font-weight:600;color:var(--tx);">${c.name}</p><p style="font-size:11px;color:var(--mt);">${c.sub}</p></div>
+      <div class="chk-circle${V.nQuit===c.id?' on':''}">
+        ${V.nQuit===c.id?'<span style="color:#fff;font-size:11px;">✓</span>':''}
+      </div>
+    </div>`;
+  });
+
+  h+=`<button class="btn-p" ${V.nQuit?`onclick="createChallenge()"`:''} style="opacity:${V.nQuit?1:.5};margin-top:12px;">${V.nQuit?'pay deposit & lock in →':'choose an option to continue'}</button>
+  <button class="btn-c" onclick="V.nStep=2;renderNew()">back</button>`;
+  return h;
+}
+
+function rNsDone(){
+  const g=GOALS.find(x=>x.id===V.nGoal)||GOALS[0];
+  const quitLabels={pot:'💰 goes into the pot',trees:'🌱 Trees for the Future',stjude:"🏥 St. Jude's",redcross:'❤️ Red Cross'};
+  return`<div style="text-align:center;padding:20px 0 14px;">
+    <div style="width:58px;height:58px;border-radius:50%;background:var(--gnl);display:flex;align-items:center;justify-content:center;margin:0 auto 10px;font-size:28px;">${g.ic}</div>
+    <p style="font-size:17px;font-weight:700;color:var(--tx);">You're locked in!</p>
+    <p style="font-size:12px;color:var(--mt);margin-top:6px;line-height:1.55;">Hit your targets — deposit comes back.<br>Quit — it ${quitLabels[V.nQuit]||'goes to charity'}.</p>
+  </div>
+  <div class="card gn">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:9px;">
+      <div style="width:34px;height:34px;border-radius:10px;background:${g.ibg};display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0;">${g.ic}</div>
+      <div><p style="font-size:13px;font-weight:600;color:var(--tx);">${g.name}</p><p style="font-size:11px;color:var(--mt);">${V.nFreq||'4x/wk'} · ${V.nDur||'30 days'} · ${V.nDep||'$50'} deposit</p></div>
+    </div>
+    <div style="border-top:0.5px solid rgba(90,158,26,.2);padding-top:9px;display:flex;align-items:center;gap:8px;">
+      <span style="font-size:14px;">🛡</span>
+      <p style="font-size:11px;color:var(--gnd);">${g.verify}</p>
+    </div>
+  </div>
+  <button class="btn-p" onclick="goTab('challenges')">start grinding</button>`;
+}
+
+async function createChallenge(){
+  const g=GOALS.find(x=>x.id===V.nGoal)||GOALS[0];
+  const dep=parseInt((V.nDep||'50').replace('$',''));
+  const ref=await db.collection('challenges').add({
+    uid:me.uid,email:me.email,
+    goal:`${g.ic} ${g.name} challenge`,
+    gid:g.id,duration:parseInt((V.nDur||'30 days')),
+    nFreq:V.nFreq,dep,quitTo:V.nQuit,
     status:'active',createdAt:FV.serverTimestamp()
   });
-  await db.collection('users').doc(me.uid).update({totalDeposited:FV.increment(parseInt(picks.dep))});
-  if(meData)meData.totalDeposited=(meData.totalDeposited||0)+parseInt(picks.dep);
-  myChallenges.unshift({id:ref.id,uid:me.uid,goal,duration:parseInt(picks.dur),gt:picks.gt,dep:parseInt(picks.dep),ch:picks.ch,status:'active',createdAt:{seconds:Date.now()/1000}});
-
-  const msg=document.getElementById('nc-msg');
-  msg.innerHTML=`<b>Almost done!</b> Opening Stripe to pay your $${picks.dep} deposit. Come back once payment is confirmed.`;
-  msg.style.display='block';
-
-  const link=STRIPE[picks.dep];
-  if(link&&!link.includes('YOUR_')){window.open(link+'?client_reference_id='+ref.id,'_blank');}
-  else{toast('⚠️ Add your Stripe payment links in the code');}
-
-  setTimeout(()=>goTab('challenges'),2500);
-}
-
-// ============================================================
-// SESSIONS
-// ============================================================
-function renderSessBanner(){
-  const a=myChallenges.find(c=>c.status==='active');
-  const b=document.getElementById('sess-banner');if(!b)return;
-  b.innerHTML=a?`<div class="card pu" style="margin-bottom:14px;"><p style="font-size:11px;color:var(--mt);">Logging session for:</p><p style="font-size:14px;font-weight:500;color:var(--wh);">"${esc(a.goal)}"</p></div>`:`<div class="note go"><b>No active challenge.</b> Start one first.</div>`;
-}
-
-async function logSession(){
-  if(!picks.sd){toast('How long was your session?');return;}
-  if(!picks.sc){toast('Did you complete it?');return;}
-  const active=myChallenges.find(c=>c.status==='active');
-  const notes=document.getElementById('sess-notes')?.value.trim()||'';
-  const done=picks.sc==='yes';
-
-  await db.collection('sessions').add({
-    uid:me.uid,cid:active?.id||null,
-    mins:parseInt(picks.sd),notes,done,
-    createdAt:FV.serverTimestamp()
-  });
-
-  if(done){
-    await db.collection('users').doc(me.uid).update({streak:FV.increment(1)});
-    if(meData)meData.streak=(meData.streak||0)+1;
-  }
-  mySessions.unshift({uid:me.uid,cid:active?.id,mins:parseInt(picks.sd),notes,done,createdAt:{seconds:Date.now()/1000}});
-
-  toast(done?'✅ Session logged! Keep going.':'⚠️ Session saved.');
-  picks.sd=null;picks.sc=null;
-  document.querySelectorAll('.cb[data-g="sd"],.cb[data-g="sc"]').forEach(b=>b.classList.remove('on'));
-  const n=document.getElementById('sess-notes');if(n)n.value='';
-  setTimeout(()=>goTab('challenges'),1200);
+  await db.collection('users').doc(me.uid).update({totalDeposited:FV.increment(dep)});
+  if(meData)meData.totalDeposited=(meData.totalDeposited||0)+dep;
+  myChallenges.unshift({id:ref.id,uid:me.uid,goal:`${g.ic} ${g.name} challenge`,gid:g.id,duration:parseInt((V.nDur||'30 days')),dep,quitTo:V.nQuit,status:'active',createdAt:{seconds:Date.now()/1000}});
+  const link=STRIPE[String(dep)];
+  if(link&&!link.includes('YOUR_'))window.open(link+'?client_reference_id='+ref.id,'_blank');
+  else toast('Add Stripe links to accept payments');
+  V.nStep=4;renderNew();
 }
 
 // ============================================================
@@ -782,162 +1007,156 @@ async function logSession(){
 function renderPriv(){
   if(V.ps===1){renderPs1();return;}if(V.ps===2){renderPs2();return;}if(V.ps===3){renderPs3();return;}if(V.ps===4){renderPs4();return;}
   document.getElementById('priv-body').innerHTML=`
-  <p style="font-size:17px;font-weight:500;color:var(--wh);margin-bottom:4px;">Private matches</p>
-  <p style="font-size:12px;color:var(--mt);margin-bottom:13px;">Create your own challenge. Earn 5% as host automatically.</p>
-  <div class="card pu">
-    <div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:10px;"><span style="font-size:20px;">👥</span><div><p style="font-size:13px;color:var(--tx);font-weight:500;">You run it, you earn from it</p><p style="font-size:11px;color:var(--mt);margin-top:2px;">5% of every buy-in goes to you automatically.</p></div></div>
-    <div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:10px;"><span style="font-size:20px;">🔗</span><div><p style="font-size:13px;color:var(--tx);font-weight:500;">Share a link, anyone joins</p><p style="font-size:11px;color:var(--mt);margin-top:2px;">Invite only or open to anyone with the link.</p></div></div>
-    <div style="display:flex;gap:10px;align-items:flex-start;"><span style="font-size:20px;">⚙️</span><div><p style="font-size:13px;color:var(--tx);font-weight:500;">You set all the rules</p><p style="font-size:11px;color:var(--mt);margin-top:2px;">Duration, buy-in, goal type, access level.</p></div></div>
+  <p style="font-size:17px;font-weight:700;color:var(--tx);margin-bottom:4px;">Private challenges</p>
+  <p style="font-size:12px;color:var(--mt);margin-bottom:13px;">Create your own fitness challenge. Earn 5% as host.</p>
+  <div class="card gn">
+    <div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:9px;"><span style="font-size:20px;">👥</span><div><p style="font-size:13px;font-weight:500;color:var(--tx);">Run it, earn from it</p><p style="font-size:11px;color:var(--mt);margin-top:2px;">5% of every buy-in to you automatically.</p></div></div>
+    <div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:9px;"><span style="font-size:20px;">🛡</span><div><p style="font-size:13px;font-weight:500;color:var(--tx);">Apple Health verified</p><p style="font-size:11px;color:var(--mt);margin-top:2px;">Nobody can fake workouts.</p></div></div>
+    <div style="display:flex;gap:10px;align-items:flex-start;"><span style="font-size:20px;">🔗</span><div><p style="font-size:13px;font-weight:500;color:var(--tx);">Share a link, anyone joins</p><p style="font-size:11px;color:var(--mt);margin-top:2px;">Invite your gym group or sports team.</p></div></div>
   </div>
-  <button class="btn btn-p" onclick="V.ps=1;V.pp={};renderPriv();">create a match</button>
-  <button class="btn btn-o" onclick="loadMyMatches().then(renderMatches);goTab('matches');" style="margin-top:6px;">view my matches</button>`;
+  <button class="btn-p" onclick="V.ps=1;V.pp={};renderPriv()">create a challenge</button>
+  <button class="btn-s" onclick="goTab('matches')">view my matches</button>`;}
+
+function stepH2(n){let d='';for(let i=1;i<=3;i++)d+=`<div class="sd${i===n?' on':''}"></div>`;return`<div class="step-ind">${d}</div>`;}
+
+function renderPs1(){document.getElementById('priv-body').innerHTML=stepH2(1)+
+  `<p style="font-size:14px;font-weight:700;color:var(--tx);margin-bottom:12px;">Set the challenge</p>
+  <div class="ig"><label class="lbl">Challenge name</label><input type="text" class="inp" id="pm-nm" placeholder='e.g. "gym squad june"'></div>
+  <div class="card" style="padding:12px;">
+    <p class="slbl" style="margin-bottom:6px;">Goal type</p>
+    <div class="cr">${GOALS.map(g=>`<div class="cb${V.pp.goal===g.id?' on':''}" onclick="V.pp.goal='${g.id}';renderPs1()" style="padding:9px 6px;">${g.ic}</br>${g.name.split('/')[0].trim().split(' ').slice(0,2).join(' ')}</div>`).join('')}</div>
+  </div>
+  <div class="card" style="padding:12px;">
+    <p class="slbl" style="margin-bottom:6px;">Duration</p>
+    <div class="cr">${['14d','30d','60d','90d'].map(d=>`<div class="cb${V.pp.dur===d?' on':''}" onclick="V.pp.dur='${d}';renderPs1()">${d}</div>`).join('')}</div>
+  </div>
+  <div class="card" style="padding:12px;">
+    <p class="slbl" style="margin-bottom:6px;">Buy-in per person</p>
+    <div class="cr">${['$25','$50','$100'].map(d=>`<div class="cb${V.pp.buy===d?' on':''}" onclick="V.pp.buy='${d}';renderPs1()">${d}</div>`).join('')}</div>
+  </div>
+  <button class="btn-p" onclick="V.ps=2;renderPriv()">next</button>
+  <button class="btn-c" onclick="V.ps=0;renderPriv()">back</button>`;}
+
+function renderPs2(){
+  const selG=GOALS.find(x=>x.id===V.pp.goal)||GOALS[0];
+  let h=stepH2(2)+
+  `<p style="font-size:14px;font-weight:700;color:var(--tx);margin-bottom:12px;">If someone quits...</p>`;
+  if(selG.hasPot){
+    h+=`<div class="quit-opt${V.pp.quit==='pot'?' on':''}" onclick="V.pp.quit='pot';renderPs2()">
+      <div style="width:34px;height:34px;border-radius:10px;background:var(--gol);display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0;">💰</div>
+      <div style="flex:1;"><p style="font-size:13px;font-weight:600;color:var(--tx);">Goes into the pot</p><p style="font-size:11px;color:var(--mt);">Finishers win more.</p></div>
+      <div class="chk-circle${V.pp.quit==='pot'?' on':''}">
+        ${V.pp.quit==='pot'?'<span style="color:#fff;font-size:11px;">✓</span>':''}
+      </div></div>`;
+  }
+  [{id:'trees',ic:'🌱',bg:'#f0f9e8',name:'Trees for the Future'},{id:'stjude',ic:'🏥',bg:'#fff0f0',name:"St. Jude's"},{id:'redcross',ic:'❤️',bg:'#fff0f0',name:'Red Cross'}].forEach(c=>{
+    h+=`<div class="quit-opt${V.pp.quit===c.id?' on':''}" onclick="V.pp.quit='${c.id}';renderPs2()">
+      <div style="width:34px;height:34px;border-radius:10px;background:${c.bg};display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0;">${c.ic}</div>
+      <div style="flex:1;"><p style="font-size:13px;font-weight:600;color:var(--tx);">${c.name}</p></div>
+      <div class="chk-circle${V.pp.quit===c.id?' on':''}">
+        ${V.pp.quit===c.id?'<span style="color:#fff;font-size:11px;">✓</span>':''}
+      </div></div>`;
+  });
+  h+=`<button class="btn-p" onclick="V.ps=3;renderPriv()">next</button>
+  <button class="btn-c" onclick="V.ps=1;renderPriv()">back</button>`;
+  document.getElementById('priv-body').innerHTML=h;
 }
 
-function stepH(n){let d='';for(let i=1;i<=3;i++)d+=`<div class="sd${i===n?' on':''}"></div>`;return`<div class="step-ind">${d}</div>`;}
-
-function renderPs1(){document.getElementById('priv-body').innerHTML=stepH(1)+`
-  <p style="font-size:16px;font-weight:500;color:var(--wh);margin-bottom:12px;">Set the basics</p>
-  <div class="ig"><label class="lbl">Match name</label><input type="text" class="inp" id="pm-nm" placeholder='e.g. "startup squad sprint"'></div>
-  <div class="ig"><label class="lbl">Duration</label><div class="cr"><div class="cb" data-g="pdur" data-v="30" onclick="pick(this);V.pp.dur=this.dataset.v;">30d</div><div class="cb" data-g="pdur" data-v="60" onclick="pick(this);V.pp.dur=this.dataset.v;">60d</div><div class="cb" data-g="pdur" data-v="90" onclick="pick(this);V.pp.dur=this.dataset.v;">90d</div></div></div>
-  <div class="ig"><label class="lbl">Buy-in per person</label><div class="cr"><div class="cb" data-g="pbuy" data-v="25" onclick="pick(this);V.pp.buy=this.dataset.v;">$25</div><div class="cb" data-g="pbuy" data-v="50" onclick="pick(this);V.pp.buy=this.dataset.v;">$50</div><div class="cb" data-g="pbuy" data-v="100" onclick="pick(this);V.pp.buy=this.dataset.v;">$100</div></div></div>
-  <button class="btn btn-p" onclick="V.ps=2;renderPriv();">next</button>
-  <button class="btn btn-o" onclick="V.ps=0;renderPriv();" style="margin-top:6px;">back</button>`;}
-
-function renderPs2(){document.getElementById('priv-body').innerHTML=stepH(2)+`
-  <p style="font-size:16px;font-weight:500;color:var(--wh);margin-bottom:12px;">Goal & access</p>
-  <div class="card${V.pp.gt==='progress'?' pu':''} tap" style="padding:12px;margin-bottom:6px;" onclick="V.pp.gt='progress';renderPs2();">
-    <div class="row"><p style="font-size:13px;color:var(--wh);">Progress goal</p>${V.pp.gt==='progress'?'<span style="color:var(--pu);">✓</span>':''}</div>
-    <p style="font-size:11px;color:var(--mt);margin-top:3px;">Sessions + milestones. Buy-in protected if they show up.</p>
-  </div>
-  <div class="card${V.pp.gt==='profit'?' pu':''} tap" style="padding:12px;margin-bottom:12px;" onclick="V.pp.gt='profit';renderPs2();">
-    <div class="row"><p style="font-size:13px;color:var(--wh);">Profit goal</p>${V.pp.gt==='profit'?'<span style="color:var(--pu);">✓</span>':''}</div>
-    <p style="font-size:11px;color:var(--mt);margin-top:3px;">Hit revenue target. Verified by Stripe.</p>
-  </div>
-  <div class="ig"><label class="lbl">Who can join</label><div class="cr"><div class="cb${V.pp.vis==='invite'?' on':''}" onclick="V.pp.vis='invite';renderPs2();">invite only</div><div class="cb${V.pp.vis==='link'?' on':''}" onclick="V.pp.vis='link';renderPs2();">anyone with link</div></div></div>
-  <button class="btn btn-p" onclick="V.ps=3;renderPriv();">next</button>
-  <button class="btn btn-o" onclick="V.ps=1;renderPriv();" style="margin-top:6px;">back</button>`;}
-
 function renderPs3(){
-  const b=parseInt(V.pp.buy||50),h2=Math.round(b*.05),a=Math.round(b*.05),pot=b-h2-a;
-  document.getElementById('priv-body').innerHTML=stepH(3)+`
-  <p style="font-size:16px;font-weight:500;color:var(--wh);margin-bottom:12px;">Review & launch</p>
+  const b=parseInt((V.pp.buy||'$50').replace('$',''));
+  const host=Math.round(b*.05),ante=Math.round(b*.10),pot=b-host-ante;
+  document.getElementById('priv-body').innerHTML=stepH2(3)+
+  `<p style="font-size:14px;font-weight:700;color:var(--tx);margin-bottom:12px;">Review & launch</p>
   <div class="card">
-    <div class="row" style="padding:8px 0;border-bottom:0.5px solid var(--bd);"><span style="font-size:13px;color:var(--tx);">members' pot</span><span style="font-size:13px;color:var(--gn);font-weight:500;">$${pot}</span></div>
-    <div class="row" style="padding:8px 0;border-bottom:0.5px solid var(--bd);"><span style="font-size:13px;color:var(--tx);">your host cut (5%)</span><span style="font-size:13px;color:var(--pu);font-weight:500;">$${h2}</span></div>
-    <div class="row" style="padding:8px 0;"><span style="font-size:13px;color:var(--tx);">Ante Up fee (10%)</span><span style="font-size:13px;color:var(--mt);">$${a}</span></div>
+    <div class="row" style="padding:7px 0;border-bottom:0.5px solid var(--bd);"><span style="font-size:12px;color:var(--tx);">members' pot</span><span style="font-size:12px;font-weight:600;color:var(--gn);">$${pot}</span></div>
+    <div class="row" style="padding:7px 0;border-bottom:0.5px solid var(--bd);"><span style="font-size:12px;color:var(--tx);">your host cut (5%)</span><span style="font-size:12px;font-weight:600;color:var(--gn);">$${host}</span></div>
+    <div class="row" style="padding:7px 0;"><span style="font-size:12px;color:var(--tx);">Grind fee (10%)</span><span style="font-size:12px;color:var(--mt);">$${ante}</span></div>
   </div>
   <div class="sg">
-    <div class="sb"><div class="sl">duration</div><div class="sv" style="font-size:14px;">${V.pp.dur||60}d</div></div>
-    <div class="sb"><div class="sl">buy-in</div><div class="sv pu" style="font-size:14px;">$${V.pp.buy||50}</div></div>
-    <div class="sb"><div class="sl">goal</div><div class="sv" style="font-size:12px;">${V.pp.gt||'progress'}</div></div>
-    <div class="sb"><div class="sl">access</div><div class="sv" style="font-size:12px;">${V.pp.vis||'invite'}</div></div>
+    <div class="sb"><div class="sl">duration</div><div class="sv" style="font-size:14px;">${V.pp.dur||'30d'}</div></div>
+    <div class="sb"><div class="sl">buy-in</div><div class="sv gn" style="font-size:14px;">${V.pp.buy||'$50'}</div></div>
+    <div class="sb"><div class="sl">if quit</div><div class="sv" style="font-size:11px;">${V.pp.quit==='pot'?'💰 pot':(V.pp.quit==='trees'?'🌱 trees':(V.pp.quit==='stjude'?"🏥 St. Jude":'❤️ Red Cross'))}</div></div>
+    <div class="sb"><div class="sl">verified by</div><div class="sv" style="font-size:11px;">🍎 Health</div></div>
   </div>
-  <button class="btn btn-p" onclick="createMatch()">launch match</button>
-  <button class="btn btn-o" onclick="V.ps=2;renderPriv();" style="margin-top:6px;">back</button>`;}
+  <button class="btn-p" onclick="launchMatch()">launch challenge</button>
+  <button class="btn-c" onclick="V.ps=2;renderPriv()">back</button>`;}
 
-async function createMatch(){
-  const nm=document.getElementById('pm-nm')?.value.trim()||(V.pp.dur+'d match');
+async function launchMatch(){
+  const nm=document.getElementById('pm-nm')?.value.trim()||'My challenge';
   const ref=await db.collection('privateMatches').add({
     hostUid:me.uid,hostName:meData?.name||'Host',
-    name:nm,buyin:parseInt(V.pp.buy||50),
-    duration:parseInt(V.pp.dur||60),
-    goalType:V.pp.gt||'progress',
-    vis:V.pp.vis||'invite',
-    pot:0,memberCount:0,hostEarned:0,
-    status:'open',members:[me.uid],
-    createdAt:FV.serverTimestamp()
+    name:nm,buyin:parseInt((V.pp.buy||'50').replace('$','')),
+    duration:parseInt(V.pp.dur||'30'),goalType:V.pp.goal||'burn',
+    quit:V.pp.quit||'trees',pot:0,memberCount:0,hostEarned:0,
+    status:'open',members:[me.uid],createdAt:FV.serverTimestamp()
   });
-  myMatches.unshift({id:ref.id,hostUid:me.uid,hostName:meData?.name||'Host',name:nm,buyin:parseInt(V.pp.buy||50),duration:parseInt(V.pp.dur||60),goalType:V.pp.gt||'progress',vis:V.pp.vis||'invite',pot:0,memberCount:0,hostEarned:0,status:'open',members:[me.uid]});
+  myMatches.unshift({id:ref.id,hostUid:me.uid,name:nm,buyin:parseInt((V.pp.buy||'50').replace('$','')),duration:parseInt(V.pp.dur||'30'),pot:0,memberCount:1,hostEarned:0,status:'open'});
   V.ps=4;renderPriv();
 }
 
 function renderPs4(){
   const m=myMatches[0];
   document.getElementById('priv-body').innerHTML=`
-  <div style="text-align:center;padding:16px 0 12px;">
-    <div style="width:54px;height:54px;border-radius:50%;background:var(--gd);display:flex;align-items:center;justify-content:center;margin:0 auto 10px;font-size:26px;">✅</div>
-    <p style="font-size:18px;font-weight:500;color:var(--wh);">Match created!</p>
-    <p style="font-size:12px;color:var(--mt);margin-top:6px;">Share the link and start collecting buy-ins.</p>
+  <div style="text-align:center;padding:20px 0 14px;">
+    <div style="width:56px;height:56px;border-radius:50%;background:var(--gnl);display:flex;align-items:center;justify-content:center;margin:0 auto 10px;font-size:28px;">✅</div>
+    <p style="font-size:17px;font-weight:700;color:var(--tx);">Challenge created!</p>
+    <p style="font-size:12px;color:var(--mt);margin-top:6px;">Share the link. Start the competition.</p>
   </div>
-  <div class="card pu">
+  <div class="card gn">
     <p class="slbl">invite link</p>
     <div style="display:flex;align-items:center;gap:8px;margin-top:4px;">
-      <div style="flex:1;background:var(--bk);border-radius:8px;padding:8px 10px;font-size:11px;color:var(--pu);">anteup.app/match/${m?.id||'new'}</div>
-      <div style="background:var(--pd);border-radius:8px;padding:8px 10px;cursor:pointer;font-size:14px;" onclick="toast('Link copied to clipboard!')">📋</div>
+      <div style="flex:1;background:var(--s1);border-radius:8px;padding:8px 10px;font-size:11px;color:var(--gn);border:0.5px solid var(--bd);">grind.app/match/${m?.id||'new'}</div>
+      <div style="background:var(--gnl);border-radius:8px;padding:8px 10px;cursor:pointer;font-size:14px;" onclick="toast('Link copied!')">📋</div>
     </div>
   </div>
-  <div class="note gn"><b>You earn 5% of every buy-in automatically.</b> The more people who join, the more you make as host.</div>
-  <button class="btn btn-p" onclick="V.ps=0;loadMyMatches().then(renderMatches);goTab('matches');">view my matches</button>
-  <button class="btn btn-o" onclick="V.ps=0;renderPriv();" style="margin-top:6px;">create another</button>`;}
+  <div class="note"><b>5% of every buy-in goes to you automatically.</b> More members = more earnings as host.</div>
+  <button class="btn-p" onclick="V.ps=0;goTab('matches')">view my matches</button>
+  <button class="btn-s" onclick="V.ps=0;renderPriv()">create another</button>`;}
 
 // ============================================================
 // MY MATCHES
 // ============================================================
 function renderMatches(){
   const active=myChallenges.filter(c=>c.status==='active');
-  let h=`<p style="font-size:17px;font-weight:500;color:var(--wh);margin-bottom:4px;">My matches</p>
-  <p style="font-size:12px;color:var(--mt);margin-bottom:13px;">Matches you host and challenges you've joined.</p>
+  let h=`<p style="font-size:17px;font-weight:700;color:var(--tx);margin-bottom:4px;">My matches</p>
+  <p style="font-size:12px;color:var(--mt);margin-bottom:13px;">Challenges you host and ones you've joined.</p>
   <span class="slbl">hosting</span>`;
 
   if(myMatches.length){
     myMatches.forEach(m=>{
-      h+=`<div class="card tap" style="border-color:rgba(167,139,250,.3);" onclick="V.selMatch='${m.id}';renderMatchDet()">
-        <div class="row" style="margin-bottom:6px;"><p style="font-size:14px;font-weight:500;color:var(--wh);">${esc(m.name)}</p><span class="pill gp">${m.status||'open'}</span></div>
+      h+=`<div class="card tap" style="border-color:rgba(90,158,26,.3);">
+        <div class="row" style="margin-bottom:6px;"><p style="font-size:13px;font-weight:600;color:var(--tx);">${esc(m.name)}</p><span class="pill gp">${m.status||'open'}</span></div>
         <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;">
-          <div><p class="slbl" style="margin:0 0 2px;">members</p><p style="font-size:13px;color:var(--tx);">${m.memberCount||1}</p></div>
-          <div><p class="slbl" style="margin:0 0 2px;">pot</p><p style="font-size:13px;color:var(--go);">$${m.pot||0}</p></div>
-          <div><p class="slbl" style="margin:0 0 2px;">earned</p><p style="font-size:13px;color:var(--gn);">$${m.hostEarned||0}</p></div>
+          <div><p class="slbl" style="margin:0 0 2px;">members</p><p style="font-size:13px;font-weight:600;color:var(--tx);">${m.memberCount||1}</p></div>
+          <div><p class="slbl" style="margin:0 0 2px;">pot</p><p style="font-size:13px;font-weight:600;color:var(--go);">$${m.pot||0}</p></div>
+          <div><p class="slbl" style="margin:0 0 2px;">earned</p><p style="font-size:13px;font-weight:600;color:var(--gn);">$${m.hostEarned||0}</p></div>
         </div>
-        <div class="row" style="margin-top:7px;"><span style="font-size:11px;color:var(--mt);">${m.duration}d · $${m.buyin} buy-in</span><span style="font-size:11px;color:var(--pu);">manage →</span></div>
+        <div class="row" style="margin-top:7px;"><span style="font-size:11px;color:var(--mt);">${m.duration}d · $${m.buyin} buy-in</span><span style="font-size:11px;color:var(--gn);">manage →</span></div>
       </div>`;
     });
   }else{
-    h+=`<div class="card"><div class="empty"><div class="ei">🔒</div><div class="et">No matches hosted yet</div><div class="es">Create a private match to start earning as host.</div></div></div>`;
+    h+=`<div class="card"><div style="text-align:center;padding:24px 16px;color:var(--mt);"><div style="font-size:32px;margin-bottom:8px;opacity:.5;">🔒</div><p style="font-size:14px;font-weight:500;color:var(--tx);margin-bottom:4px;">No matches hosted yet</p><p style="font-size:12px;line-height:1.5;">Create a private challenge to start earning as host.</p></div></div>`;
   }
 
-  h+=`<button class="btn btn-p" onclick="V.ps=0;goTab('private');">create a private match</button>`;
+  h+=`<button class="btn-p" onclick="V.ps=0;goTab('private')">create a private challenge</button>`;
 
   if(active.length){
-    h+=`<span class="slbl" style="margin-top:8px;">joined</span>`;
+    h+=`<span class="slbl" style="margin-top:10px;">joined</span>`;
     active.forEach(c=>{
       const d=daysAgo(c.createdAt),p=Math.min(100,Math.round((d/c.duration)*100));
-      h+=`<div class="card pu tap" onclick="openChal('${c.id}')">
-        <div class="row"><div><p class="li-t">${esc(c.goal.length>32?c.goal.slice(0,32)+'…':c.goal)}</p><p class="li-s">Day ${d} · $${c.dep} · ${c.gt}</p></div><span class="pill pp">active</span></div>
+      const g=GOALS.find(x=>x.id===c.gid)||GOALS[0];
+      h+=`<div class="card gn tap" onclick="openChal('${c.id}')">
+        <div class="row"><div><p style="font-size:13px;font-weight:600;color:var(--tx);">${g.ic} ${esc(c.goal.length>30?c.goal.slice(0,30)+'…':c.goal)}</p><p style="font-size:11px;color:var(--mt);margin-top:2px;">Day ${d} · $${c.dep}</p></div><span class="pill gp">active</span></div>
         <div class="pb-bg" style="margin-top:7px;"><div class="pb" style="width:${p}%;"></div></div>
-        <div class="row" style="margin-top:4px;"><span style="font-size:11px;color:var(--mt);">${p}% done</span><span style="font-size:11px;color:var(--pu);">tap for progress →</span></div>
+        <div class="row" style="margin-top:4px;"><span style="font-size:11px;color:var(--mt);">${p}% done</span><span style="font-size:11px;color:var(--gn);">tap for progress →</span></div>
       </div>`;
     });
   }else{
-    h+=`<span class="slbl" style="margin-top:8px;">joined</span>
-    <div class="card"><div class="empty"><div class="ei">🏆</div><div class="et">No challenges joined</div><div class="es">Join a public challenge to see it here.</div></div></div>
-    <button class="btn btn-o" onclick="goTab('challenges');">browse challenges</button>`;
+    h+=`<span class="slbl" style="margin-top:10px;">joined</span>
+    <div class="card"><div style="text-align:center;padding:20px 16px;color:var(--mt);"><div style="font-size:32px;margin-bottom:8px;opacity:.5;">🏆</div><p style="font-size:14px;font-weight:500;color:var(--tx);margin-bottom:4px;">No challenges joined yet</p></div></div>
+    <button class="btn-s" onclick="goTab('challenges')">browse challenges</button>`;
   }
-
   document.getElementById('match-body').innerHTML=h;
-}
-
-function renderMatchDet(){
-  const m=myMatches.find(x=>x.id===V.selMatch);if(!m)return;
-  show('mdet');document.getElementById('tabbar').classList.add('on');
-  document.getElementById('mdet-ttl').textContent=m.name;
-  const b=m.buyin||50,host=Math.round(b*.05),ante=Math.round(b*.05);
-  document.getElementById('mdet-body').innerHTML=`
-  <p style="font-size:12px;color:var(--mt);margin-bottom:13px;">${m.duration}d · $${b} buy-in · ${m.vis||'invite only'}</p>
-  <div class="sg">
-    <div class="sb"><div class="sl">pot</div><div class="sv go">$${m.pot||0}</div></div>
-    <div class="sb"><div class="sl">members</div><div class="sv">${m.memberCount||1}</div></div>
-    <div class="sb"><div class="sl">host earned</div><div class="sv gn">$${m.hostEarned||0}</div></div>
-    <div class="sb"><div class="sl">per new member</div><div class="sv pu">$${host}</div></div>
-  </div>
-  <div class="card pu">
-    <p class="slbl">invite link</p>
-    <div style="display:flex;align-items:center;gap:8px;margin-top:4px;">
-      <div style="flex:1;background:var(--bk);border-radius:8px;padding:8px 10px;font-size:11px;color:var(--pu);">anteup.app/match/${m.id}</div>
-      <div style="background:var(--pd);border-radius:8px;padding:8px 10px;cursor:pointer;font-size:14px;" onclick="toast('Link copied!')">📋</div>
-    </div>
-  </div>
-  <div class="note gn"><b>$${host} earned per buy-in automatically</b> — every new member adds to your host earnings.</div>
-  <div class="note go"><b>How the $${b} split works:</b><br>Members' pot: $${b-host-ante} · Your cut: $${host} · Ante Up fee: $${ante}</div>`;
 }
 </script>
 </body>
